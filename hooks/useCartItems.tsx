@@ -1,15 +1,26 @@
+import { useGlobalState } from "@/stores/useGlobalState"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 export default function useCartItems() {
   const [cartItems, setCartItems] = useState<null | Array<Record<string, any>>>(null)
   const prevCartItems = useRef<any>(null)
+  // note: using selector to only get the setter function,
+  // prevents a re-render caused by the globalState.cartItemsCount
+  // value's change. 
+  // 
+  // now, alhamdulillah, this component only renders once when the add()
+  // function is called.
+  const setCartItemsCount = useGlobalState(state => state.setCartItemsCount)
+  const globalState = {setCartItemsCount}
 
   useEffect(() => {
+    console.log('usecartitems: useeffect first render')
     const s = window.localStorage.getItem("cartItems") || "[]"
     const list = JSON.parse(s)
     setCartItems(list)
     prevCartItems.current = list
-    console.log('loaded cart from localstorage', list.length)
+    console.log('usecartitems: loaded cart from localstorage', list.length)
+    globalState.setCartItemsCount(list.length)
   }, [])
 
   // note: the only correct way to react to state changes
@@ -28,7 +39,8 @@ export default function useCartItems() {
     if (cartItems == null) return
     if (prevCartItems.current == cartItems ) return
     window.localStorage.setItem('cartItems', JSON.stringify(cartItems))
-    console.log('updating cart local storage', cartItems.length)
+    globalState.setCartItemsCount(cartItems.length)
+    console.log('usecartitems: updating cart local storage', cartItems.length)
     prevCartItems.current  = cartItems
   }, [cartItems])
 
@@ -42,12 +54,12 @@ export default function useCartItems() {
   const add = useCallback((id: any) => {
     setCartItems((prev) => {
         prev = prev!
-      const ci = prev.findIndex((ci) => ci.id == id)
-      if (ci === -1) {
+      const idx = prev.findIndex((ci) => ci.id == id)
+      if (idx === -1) {
         return [...prev, { id: id, quantity: 1 }]
       } else {
         const copy = [...prev]
-        copy[ci].quantity = copy[ci].quantity + 1
+        copy[idx].quantity = copy[idx].quantity + 1
         return copy
       }
     })
@@ -57,9 +69,30 @@ export default function useCartItems() {
     setCartItems(prev => prev!.filter(p => p.id != id))
   }, [])
 
+  const removeByQty = useCallback((id: any, qty: number) => {
+    setCartItems(prev => {
+      prev = prev!
+      const idx = prev.findIndex(p => p.id === id)
+      if (idx === -1) return prev
+
+      const copy = [...prev]
+      if (copy[idx].quantity > qty) {
+        copy[idx].quantity -= qty
+        return copy
+      } else {
+        // Remove the item if quantity after removal is 0 or less
+        copy.splice(idx, 1)
+        return copy
+      }
+    })
+  }, [])
+
   // note: the returning object made up of list, add, remove, etc should be memoized so that users of this hook doesn't get a new object unless list, add, remove, etc *actually* changed.
-  const list = cartItems
-  const result = {list, add, remove}
-  if (cartItems == null) result.list = []
-  return useMemo(() => (result), [list, add, remove])
+  let list = cartItems
+  if (cartItems == null) list = []
+  console.log('--- usecartitems: id-1, qty-', list?.find(l => l.id == 1)?.quantity)
+  const result = {list, add, remove, removeByQty}
+  // note: using Object.values() would be a horrible mistake.
+  //return useMemo(() => result, [...Object.values(result)])
+  return useMemo(() => result, [list, add, remove, removeByQty])
 }

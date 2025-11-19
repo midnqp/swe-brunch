@@ -1,9 +1,12 @@
 "use client"
-import IconMuis from "@/components/icon"
-import { PageLayout } from "@/components/page"
-import useCartItems from "@/components/useCartItems"
+import IconMuis from "@/components/IconMuis"
+import { PageLayout } from "@/components/PageLayout"
+import useCartItems from "@/hooks/useCartItems"
+import { useGlobalState } from "@/stores/useGlobalState"
 import { IconButton } from "@mui/material"
+import clsx from "clsx"
 import Image from "next/image"
+import Link from "next/link"
 
 export default function BrowsePage() {
   const food = {
@@ -26,17 +29,41 @@ export default function BrowsePage() {
 
   // todo: this a global state. but i think the logic to increase it should be in the reducer???
   // get cart items from localstorage. have a function named usecartitems.
-  const _cartItems = useCartItems()
-  const cartItems = _cartItems.list
-  const addToCart =  _cartItems.add
+  const cartItems = useCartItems()
+  const addToCart = cartItems.add
+  const globalState: any = useGlobalState()
+  const showCart = true //globalState.cartItemsCount > 0 //true
 
   return (
     <PageLayout>
       <h1 className="mb-8 text-4xl">Browse</h1>
+
+      {/** todo:
+       * - use conditional code instead. 
+       * - make this a separate component.
+       * */}
+      {/*<div
+        className="fixed bottom-0 left-0 z-50 block h-20 w-full bg-black md:hidden"
+        onClick={() => {
+        }}
+      >
+        <Link href="/cart">
+          <div className="flex h-full w-full items-center justify-center">
+            <div className="flex w-full text-white [&>div]:flex [&>div]:justify-center">
+              <div className="w-[20%]">
+                <IconMuis iconName="local_mall" />
+              </div>
+              <div className="h-full w-[60%]">View Cart</div>
+              <div className="w-[20%]">Tk 200</div>
+            </div>
+          </div>
+        </Link>
+      </div> */}
+
       {/** tip: ideal layout for item menus */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {items.map((item) => (
-          <Card {...{addToCart, item}} />
+          <Card {...{ addToCart, item }} />
         ))}
       </div>
     </PageLayout>
@@ -47,11 +74,11 @@ function Card(props: any) {
   const item = props.item
 
   return (
-    <div className="border-gray-300 bg-white border rounded-md p-4">
+    <div className="rounded-md border border-gray-300 bg-white p-4">
       <div style={{}} className="relative">
         <IconButton
           onClick={() => props.addToCart(item.id)}
-          className="absolute! bg-gray-300! rounded-full  h-8 w-8 top-0 right-0 z-10"
+          className="absolute! top-0 right-0 z-10 h-8 w-8 rounded-full bg-gray-300!"
         >
           <IconMuis className="text-white!" iconName="add" />
         </IconButton>
@@ -61,7 +88,7 @@ function Card(props: any) {
         </IconButton> */}
       </div>
       {/** tip: how to work with next's image compo. */}
-      <div className="relative w-full h-48">
+      <div className="relative h-48 w-full">
         <Image fill className="object-contain" alt="" src={item.image} />
       </div>
       <div>
