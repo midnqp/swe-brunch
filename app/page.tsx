@@ -31,23 +31,25 @@ export default function BrowsePage() {
   // get cart items from localstorage. have a function named usecartitems.
   const cartItems = useCartItems()
   const addToCart = cartItems.add
-  const globalState: any = useGlobalState()
-  const showCart = true //globalState.cartItemsCount > 0 //true
+  const globalStateCartItemsCount = useGlobalState(state => state.cartItemsCount)
+  const shouldShowCart = globalStateCartItemsCount > 0
+  const isCartModalOpen = useGlobalState(state => state.isCartModalOpen)
+  const setCartModalOpen = useGlobalState(state => state.setCartModalOpen)
 
   return (
     <PageLayout>
       <h1 className="mb-8 text-4xl">Browse</h1>
 
       {/** todo:
-       * - use conditional code instead. 
+       * - use conditional code instead.
        * - make this a separate component.
        * */}
-      {/*<div
-        className="fixed bottom-0 left-0 z-50 block h-20 w-full bg-black md:hidden"
+      {shouldShowCart && <div
+        className="fixed bottom-0 left-0 z-50 block h-20 w-full bg-black md:hidden cursor-pointer"
         onClick={() => {
+          setCartModalOpen(true)
         }}
       >
-        <Link href="/cart">
           <div className="flex h-full w-full items-center justify-center">
             <div className="flex w-full text-white [&>div]:flex [&>div]:justify-center">
               <div className="w-[20%]">
@@ -57,8 +59,7 @@ export default function BrowsePage() {
               <div className="w-[20%]">Tk 200</div>
             </div>
           </div>
-        </Link>
-      </div> */}
+      </div> }
 
       {/** tip: ideal layout for item menus */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">

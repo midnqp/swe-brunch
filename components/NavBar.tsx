@@ -1,5 +1,5 @@
 import { useGlobalState } from "@/stores/useGlobalState"
-import { IconButton, Badge, Dialog, DialogContent, DialogTitle, useMediaQuery, useTheme } from "@mui/material"
+import { IconButton, Badge, Dialog, DialogContent, DialogTitle, useMediaQuery, useTheme, DialogActions, Button, Divider, Link } from "@mui/material"
 import { useState, useEffect } from "react"
 import IconMuis from "./IconMuis"
 import { Cart } from "./Cart"
@@ -15,10 +15,9 @@ export function NavBar() {
   ]
   const logoCaption = list[logoCaptionIdx]
 
-  const store: any = useGlobalState()
-  const cartItemsCount = store.cartItemsCount
-  const [showCart, setShowCart] = useState(false)
-  //console.log("navbar: cart items count", cartItemsCount)
+  const cartItemsCount = useGlobalState(state => state.cartItemsCount)
+  const isCartModalOpen = useGlobalState(state => state.isCartModalOpen)
+  const setCartModalOpen = useGlobalState(state => state.setCartModalOpen)
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -52,10 +51,10 @@ export function NavBar() {
 
 
   return (
-    <div className="fixed top-0 left-0 z-50 flex min-h-24 w-full px-8 py-2 backdrop-blur-sm">
+    <div className="fixed top-0 left-0 z-50 flex min-h-24  md:min-h-24 w-full px-4 md:px-8 py-4 md:py-2 backdrop-blur-sm">
       <div className="flex w-[80%] items-center">
         <div className="w-full">
-          <div className="flex">
+          <Link className="flex " underline="none" href='/'>
             <p className="flex justify-center border-2 border-black p-0 font-mono text-4xl leading-none text-black">
               SWE BRUNCH
             </p>
@@ -68,7 +67,7 @@ export function NavBar() {
              * but they only appear when the user hasn't started
              * scrolling yet. otherwise this will be distracting.
              */}
-          </div>
+          </Link>
           <div className="">
             <p className="hidden text-sm md:block">{logoCaption}</p>
           </div>
@@ -81,45 +80,74 @@ export function NavBar() {
 
         <IconButton
           onClick={() => {
-            setShowCart(true)
+            setCartModalOpen(true)
           }}
         >
           <Badge badgeContent={cartItemsCount} color="warning">
             <IconMuis iconName="local_mall" />
           </Badge>
         </IconButton>
-        <Dialog
-          open={showCart}
-          onClose={() => setShowCart(false)}
-          fullWidth
-          //maxWidth="md"
-          maxWidth={false}
-          fullScreen = {fullScreen}
-          hideBackdrop={true}
-          //keepMounted
-          slotProps={{paper:{
-            // note: probably using absolute instead of fixed, since mui adds a layer equal 
-            // screen dimensions as a first child of body. 
-            className: 'absolute!  md:top-[80px]! md:right-[16px]! md:m-0 md:w-[520px]!',
-            /*sx: {
-              position: "absolute",
-              top: 80,
-              right: 16,
-              margin: 0,
-              width: { xs: "calc(100% - 32px)", sm: 420, md: 520 },
-              borderRadius: 2,
-              boxShadow: 6,
-            }, */
-          }}}
-        >
-          <DialogTitle className="">Your Items</DialogTitle>
-          {
-            // h-screen md:h-fit
-          }
-          <DialogContent className="md:max-h-[70vh]">
-            <Cart {...{products: items, cartItems}} />
-          </DialogContent>
-        </Dialog>
+        <div className="relative ">
+          <Dialog
+            open={isCartModalOpen}
+            onClose={() => setCartModalOpen(false)}
+            fullWidth
+            maxWidth={false}
+            fullScreen = {fullScreen}
+            hideBackdrop={true}
+            //maxWidth="md"
+            //keepMounted
+            slotProps={{paper:{
+              // note: probably using absolute instead of fixed, since mui adds a layer equal
+              // screen dimensions as a first child of body.
+              className: 'absolute! pt-4! md:top-[40px]! md:right-[0px]! md:m-0 md:w-[400px]! md:h-[80%]!',
+              // note: move sx to classname for easier css based on screensize.
+              /*sx: {
+                position: "absolute",
+                top: 80,
+                right: 16,
+                margin: 0,
+                width: { xs: "calc(100% - 32px)", sm: 420, md: 520 },
+                borderRadius: 2,
+                boxShadow: 6,
+              }, */
+            }}}
+          >
+            <div className="flex">
+              <DialogTitle className="w-4/5">
+                Your Items
+                </DialogTitle>
+                <div className=" w-1/5 flex justify-center items-center ">
+                <IconButton className="" onClick={() => setCartModalOpen(false)}>
+                  <IconMuis iconName="close" />
+                </IconButton>
+                </div>
+            </div>
+            <DialogContent className="">
+              <Cart {...{products: items, cartItems}} />
+              {/** note: intentionally using &>.info-line as a learning note. 
+               * Works like a charm regardless.
+               */}
+              <div className="[&>.info-line]:mt-2">
+                <Divider className="mb-8!"/>
+                <div className="info-line flex justify-between">
+                  <p>Subtotal</p>
+                  <p>Tk 890</p>
+                </div>
+                <div className="info-line flex justify-between">
+                  <p>Standard Delivery Charge</p>
+                  <p>Tk 24</p>
+                </div> 
+                <div className="info-line flex justify-between">
+                  <p>Service Fee</p>
+                  <p>Tk 19</p>
+                </div> 
+              </div>
+            </DialogContent>
+            <DialogActions  className='flex! justify-center! py-4!' >
+              <Button className="rounded-full! normal-case! bg-black! text-white! px-8! py-4! text-base! font-bold! flex!"><span>Pay Tk 890 &nbsp;</span> <IconMuis className='text-md!' iconName="arrow_right_alt"></IconMuis></Button></DialogActions>
+          </Dialog>
+        </div>
       </div>
     </div>
   )

@@ -5,18 +5,20 @@ import Image from "next/image"
 export function Cart(props: any) {
   const { cartItems, products } = props
   //const cartItems = useCartItems()
+  //const list = [...cartItems.list, ...cartItems.list]
+  const list = cartItems.list
   console.log("cart: rendering")
   return (
     <div>
-      {cartItems.list.map((item: any, idx: number) => (
-        <>
+      {list.map((item: any, idx: number) => (
+        <div key={idx}>
           <CartItem {...{ item, cartItems }} />
           {idx < cartItems.list.length - 1 && (
             <div className="px-4">
               <Divider className="" />
             </div>
           )}
-        </>
+        </div>
       ))}
     </div>
   )

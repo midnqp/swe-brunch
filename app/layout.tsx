@@ -25,17 +25,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable}  antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         /**
          * note: this is the difference between fontName.variable and fontName.className.
-         * 
+         *
          * using .className immediately sets the text's font.
-         * 
+         *
          * using .variable only creates a css variable 'font-geist-sans'
          * but does not set that font for the texts automatically. (but, on my
          * phone it was automatically set. how? idk. 🤷🤷🤷)
          */
-        style={{fontFamily: 'var(--font-geist-sans)'}}
+        style={{ fontFamily: "var(--font-geist-sans)" }}
       >
         {children}
       </body>

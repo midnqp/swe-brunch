@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# todos
+- make logo clickable
+- add prettier-jsdoc
+- make the view-cart section's cart icon and money amount more aligned. it isn't.
+- hide captions in logo in mobile.
+- fix alignments in mobile view of cart page.
+- make the logo caption text a component by itself. (currently it is causing the entire navbar component to re-render. also calling the usecartitems() hook endlessly.)
+- perhaps add a no-empty-classname eslint rule?
+- **big idea**: using breakpoint styling breakpoint `sm` instead of `md` seems to be an obvious change.
 
-## Getting Started
+# `no-empty-classname` eslint rule
 
-First, run the development server:
+remove the classnames with an empty string from jsx elements. previously, i talked about adding a 'key' to list items produced by a loop. i might look into a custom impl of this later on inshallah.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## custom rule code
+
+Here’s a minimal custom ESLint rule that flags empty `className` attributes in JSX. Drop this in your own plugin (e.g., `eslint-plugin-no-empty-classname/index.js`) and reference it from `.eslintrc`.
+
+```js
+// lib/rules/no-empty-classname.js
+module.exports = {
+  meta: {
+    type: 'problem',
+    docs: {
+      description: 'disallow empty className strings in JSX',
+    },
+    messages: {
+      empty: 'Remove empty className; it has no effect.',
+    },
+    schema: [], // no options
+    fixable: 'code',
+  },
+
+  create(context) {
+    return {
+      JSXAttribute(node) {
+        if (
+          node.name &&
+          node.name.name === 'className' &&
+          node.value &&
+          node.value.type === 'Literal' &&
+          typeof node.value.value === 'string' &&
+          node.value.value.trim() === ''
+        ) {
+          context.report({
+            node,
+            messageId: 'empty',
+            fix(fixer) {
+              return fixer.remove(node);
+            },
+          });
+        }
+      },
+    };
+  },
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Usage example:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```js
+// eslint-plugin-no-empty-classname/index.js
+module.exports = {
+  rules: {
+    'no-empty-classname': require('./lib/rules/no-empty-classname'),
+  },
+};
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+In `.eslintrc`:
 
-## Learn More
+```json
+{
+  "plugins": ["no-empty-classname"],
+  "rules": {
+    "no-empty-classname/no-empty-classname": "warn"
+  }
+}
+```
 
-To learn more about Next.js, take a look at the following resources:
+This flags cases like `<div className="">` and auto-removes the attribute. You can extend the logic if you want it to catch template literals, expressions, etc.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## plug in the rule from a local file
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+In legacy `.eslintrc` (JSON/YAML) configs, ESLint loads rules only via plugins it can resolve on the Node module path (e.g., `eslint-plugin-foo`). So to use your custom rule there, you’d typically package it as a plugin (even if it’s just a local directory referenced with `npm link` or aliased in `package.json`).
 
-## Deploy on Vercel
+If you want to point directly at a local file without publishing a plugin, switch to ESLint’s flat config (`eslint.config.js`). In that format you can `import` your rule file and register it inline:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```js
+import noEmptyClassname from './eslint/rules/no-empty-classname.js';
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+export default [{
+  files: ['**/*.{js,jsx,ts,tsx}'],
+  plugins: {
+    local: {
+      rules: {
+        'no-empty-classname': noEmptyClassname,
+      },
+    },
+  },
+  rules: {
+    'local/no-empty-classname': 'warn',
+  },
+}];
+```
+
+So: `.eslintrc.json` can’t pull a rule straight from an arbitrary path; you either wrap it as a plugin or move to the flat config where you can import it directly.
