@@ -1,4 +1,4 @@
-import {create} from 'zustand'
+import { create } from "zustand"
 
 type GlobalState = {
   cartItemsCount: number
@@ -7,9 +7,12 @@ type GlobalState = {
   setCartModalOpen: (value: boolean) => void
 }
 
-export const useGlobalState = create<GlobalState>((set ) => ({
-    cartItemsCount: 0,
-    setCartItemsCount:  (value: number) => set({cartItemsCount: value}),
-    isCartModalOpen: false,
-    setCartModalOpen: (value:boolean) => set({isCartModalOpen: value})
-} as const))
+export const useGlobalState = create<GlobalState>(
+  (set) =>
+    ({
+      cartItemsCount: 0,
+      setCartItemsCount: (value: number) => set({ cartItemsCount: value }),
+      isCartModalOpen: false,
+      setCartModalOpen: (value: boolean) => set({ isCartModalOpen: value }),
+    }) as const,
+)

@@ -6,7 +6,7 @@
     "dev": "nodemon -w .nodemonrestart --exec 'next dev'",
     "build": "next build; touch .nodemonrestart",
     "start": "next start",
-    "lint": "prettier --log-level error -w ./app ./components"
+    "lint": "prettier --log-level error -w ./app ./components ./hooks ./stores"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
