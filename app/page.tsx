@@ -29,12 +29,13 @@ export default function BrowsePage() {
 
   // todo: this a global state. but i think the logic to increase it should be in the reducer???
   // get cart items from localstorage. have a function named usecartitems.
-  const cartItems = useCartItems()
-  const addToCart = cartItems.add
-  const globalStateCartItemsCount = useGlobalState(state => state.cartItemsCount)
-  const shouldShowCart = globalStateCartItemsCount > 0
-  const isCartModalOpen = useGlobalState(state => state.isCartModalOpen)
-  const setCartModalOpen = useGlobalState(state => state.setCartModalOpen)
+  const addToCart = useCartItems().add
+  const globalStateCartItemsCount = useGlobalState(
+    (state) => state.cartItemsCount,
+  )
+  const shouldShowViewCartBar = globalStateCartItemsCount > 0
+  const isCartModalOpen = useGlobalState((state) => state.isCartModalOpen)
+  const setCartModalOpen = useGlobalState((state) => state.setCartModalOpen)
 
   return (
     <PageLayout>
@@ -44,31 +45,30 @@ export default function BrowsePage() {
        * - use conditional code instead.
        * - make this a separate component.
        * */}
-      {shouldShowCart && <div
-        className="fixed bottom-0 left-0 z-50 block h-20 w-full bg-black md:hidden cursor-pointer"
-        onClick={() => {
-          setCartModalOpen(true)
-        }}
-      >
-          <div className="flex h-full w-full items-center justify-center">
-            <div className="flex w-full text-white [&>div]:flex [&>div]:justify-center">
-              <div className="w-[20%]">
-                <IconMuis iconName="local_mall" />
-              </div>
-              <div className="h-full w-[60%]">View Cart</div>
-              <div className="w-[20%]">Tk 200</div>
-            </div>
-          </div>
-      </div> }
+      {shouldShowViewCartBar && (
+        <MobileViewCartBar
+          totalLabel="Tk 200"
+          onClick={() => {
+            setCartModalOpen(true)
+          }}
+        />
+      )}
 
       {/** tip: ideal layout for item menus */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {items.map((item) => (
-          <Card {...{ addToCart, item }} />
+      <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+        {items.map((item, idx) => (
+          <Card key={idx} {...{ addToCart, item }} />
         ))}
       </div>
+
+      {shouldShowViewCartBar && <ViewCartBarOffset />}
     </PageLayout>
   )
+}
+
+function ViewCartBarOffset() {
+  /** note: h-20 is equal to the length of ViewCartBar.  */
+  return <div className="h-20"></div>
 }
 
 function Card(props: any) {
@@ -96,6 +96,30 @@ function Card(props: any) {
         <p className="font-bold">{item.name}</p>
         <p>${item.price}</p>
         <p>{item.description}</p>
+      </div>
+    </div>
+  )
+}
+
+type MobileViewCartBarProps = {
+  totalLabel: string
+  onClick: () => void
+}
+
+function MobileViewCartBar({ totalLabel, onClick }: MobileViewCartBarProps) {
+  return (
+    <div
+      className="fixed bottom-0 left-0 z-50 block h-20 w-full cursor-pointer bg-black md:hidden"
+      onClick={onClick}
+    >
+      <div className="flex h-full w-full items-center justify-center">
+        <div className="flex w-full text-white [&>div]:flex [&>div]:justify-center">
+          <div className="w-[20%]">
+            <IconMuis iconName="local_mall" />
+          </div>
+          <div className="h-full w-[60%]">View Cart</div>
+          <div className="w-[20%]">{totalLabel}</div>
+        </div>
       </div>
     </div>
   )

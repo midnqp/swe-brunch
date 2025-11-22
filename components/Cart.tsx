@@ -1,19 +1,19 @@
 import { Divider, IconButton } from "@mui/material"
 import IconMuis from "./IconMuis"
 import Image from "next/image"
+import useCartItems from "@/hooks/useCartItems"
 
-export function Cart(props: any) {
-  const { cartItems, products } = props
-  //const cartItems = useCartItems()
+export function CartItems() {
+  const cartItems = useCartItems()
   //const list = [...cartItems.list, ...cartItems.list]
-  const list = cartItems.list
+  const list = cartItems.list!
   console.log("cart: rendering")
   return (
     <div>
       {list.map((item: any, idx: number) => (
         <div key={idx}>
-          <CartItem {...{ item, cartItems }} />
-          {idx < cartItems.list.length - 1 && (
+          <CartItemRow {...{ item, cartItems }} />
+          {idx < list.length - 1 && (
             <div className="px-4">
               <Divider className="" />
             </div>
@@ -24,7 +24,7 @@ export function Cart(props: any) {
   )
 }
 
-function CartItem(props: any) {
+function CartItemRow(props: any) {
   const { item, cartItems } = props
   //const cartItems = useCartItems()
   const onAddClick = () => cartItems.add(item.id)
