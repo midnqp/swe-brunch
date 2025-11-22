@@ -7,6 +7,15 @@
 - make the logo caption text a component by itself. (currently it is causing the entire navbar component to re-render. also calling the usecartitems() hook endlessly.)
 - perhaps add a no-empty-classname eslint rule?
 - **big idea**: using breakpoint styling breakpoint `sm` instead of `md` seems to be an obvious change.
+- ~~fix the big bug with separate useCartItems() hook instance not being in sync since updates to local storage dont trigger them to fetch new data from local storage.~~
+  - i solved it without using useGlobalState() by doing the 'thing' i am so well in doing.
+  - that is the '2nd layer' approach. 
+  - so, i've made one function `setCartItems()` and i have renamed the useState variable to `_setCartItems()` and the `setCartItems` wrapper fetches new data from localstorage 
+  every single time before invoking `_setCartItems()`.
+  - this is indeed fun of a different extent to not require 'global' stuff.
+- 20 nov EOD - now i should work on what next???
+  - todo. this is yet to be found out.
+  - inshallah, tomorrow i will 'continue from where i left off today'.
 
 # `no-empty-classname` eslint rule
 
