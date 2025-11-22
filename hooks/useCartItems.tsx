@@ -2,9 +2,9 @@ import { useGlobalState } from "@/stores/useGlobalState"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 export default function useCartItems() {
-  const [cartItems, setCartItems] = useState<null | Array<Record<string, any>>>(
-    null,
-  )
+  const [cartItems, _setCartItems] = useState<null | Array<
+    Record<string, any>
+  >>(null)
   const prevCartItems = useRef<any>(null)
   // note: using selector to only get the setter function,
   // prevents a re-render caused by the globalState.cartItemsCount
@@ -15,15 +15,24 @@ export default function useCartItems() {
   const setCartItemsCount = useGlobalState((state) => state.setCartItemsCount)
   const globalState = { setCartItemsCount }
 
-  useEffect(() => {
-    console.log("usecartitems: useeffect first render")
+  const loadFromLocalStorage = () => {
     const s = window.localStorage.getItem("cartItems") || "[]"
     const list = JSON.parse(s)
-    setCartItems(list)
+    _setCartItems(list)
     prevCartItems.current = list
     console.log("usecartitems: loaded cart from localstorage", list.length)
     globalState.setCartItemsCount(list.length)
+  }
+
+  useEffect(() => {
+    console.log("usecartitems: useeffect first render")
+    loadFromLocalStorage()
   }, [])
+
+  const setCartItems:typeof _setCartItems = (valueOrReducer) => {
+    loadFromLocalStorage()
+    _setCartItems(valueOrReducer)
+  }
 
   // note: the only correct way to react to state changes
   // and make a save elsewhere to use an useeffect.
