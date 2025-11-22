@@ -157,18 +157,30 @@ function CartDialog({ open, onClose, hasCartItems }: CartDialogProps) {
             </div>
           )}
 
-          {!hasCartItems && (<div className="w-full h-full"><div className="w-full"></div></div>)}
+          {!hasCartItems && (
+            <div className="flex h-full w-full items-center justify-center select-none">
+              <div className="">
+                <IconMuis
+                  className="flex! justify-center! text-7xl! text-gray-400!"
+                  iconName="shopping_cart"
+                />
+                <p className="text-gray-400">Cart is empty</p>
+              </div>{" "}
+            </div>
+          )}
         </DialogContent>
-        {hasCartItems &&<DialogActions className="flex! justify-center! py-4!">
-            <Button className="flex! rounded-full! bg-black! px-8! py-4! text-base! font-bold! text-white! normal-case!">
-              <span>Pay Tk 890 &nbsp;</span>{" "}
-              <IconMuis
-                className="text-md!"
-                iconName="arrow_right_alt"
-              ></IconMuis>
-            </Button>
-        </DialogActions>
-          }
+
+          <DialogActions className="flex! justify-center! py-4!">
+            {hasCartItems && (
+              <Button className="flex! rounded-full! bg-black! px-8! py-4! text-base! font-bold! text-white! normal-case!">
+                <span>Pay Tk 890 &nbsp;</span>{" "}
+                <IconMuis
+                  className="text-md!"
+                  iconName="arrow_right_alt"
+                ></IconMuis>
+              </Button>
+            )}
+          </DialogActions>
       </Dialog>
     </div>
   )
