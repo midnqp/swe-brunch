@@ -4,9 +4,7 @@ import { PageLayout } from "@/components/PageLayout"
 import useCartItems from "@/hooks/useCartItems"
 import { useGlobalState } from "@/stores/useGlobalState"
 import { IconButton } from "@mui/material"
-import clsx from "clsx"
 import Image from "next/image"
-import Link from "next/link"
 
 export default function BrowsePage() {
   const food = {
@@ -22,29 +20,19 @@ export default function BrowsePage() {
     { ...food, id: 2, name: "Item 2", price: 49.99 },
     { ...food, id: 3, name: "Item 3", price: 149.99 },
   ]
-  /*const items: Array<{ name: string; price: number }> = Array(10)
-    .fill(food)
-    .map((f, i) => ({ ...f, id:i, name: `Item ${i + 1}`, price: (i + 1) * 100 }))
-    */
 
-  // todo: this a global state. but i think the logic to increase it should be in the reducer???
-  // get cart items from localstorage. have a function named usecartitems.
-  const addToCart = useCartItems().add
+  const cartItems = useCartItems()
   const globalStateCartItemsCount = useGlobalState(
     (state) => state.cartItemsCount,
   )
   const shouldShowViewCartBar = globalStateCartItemsCount > 0
-  const isCartModalOpen = useGlobalState((state) => state.isCartModalOpen)
   const setCartModalOpen = useGlobalState((state) => state.setCartModalOpen)
+  const addToCart = cartItems.add
 
   return (
     <PageLayout>
       <h1 className="mb-8 text-4xl">Browse</h1>
 
-      {/** todo:
-       * - use conditional code instead.
-       * - make this a separate component.
-       * */}
       {shouldShowViewCartBar && (
         <MobileViewCartBar
           totalLabel="Tk 200"
@@ -57,28 +45,29 @@ export default function BrowsePage() {
       {/** tip: ideal layout for item menus */}
       <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-3">
         {items.map((item, idx) => (
-          <Card key={idx} {...{ addToCart, item }} />
+          <Card key={idx} {...{ cartItems, addToCart, item }} />
         ))}
       </div>
 
-      {shouldShowViewCartBar && <ViewCartBarOffset />}
+      {shouldShowViewCartBar && <MobileViewCartBarOffset />}
     </PageLayout>
   )
 }
 
-function ViewCartBarOffset() {
-  /** note: h-20 is equal to the length of ViewCartBar.  */
+function MobileViewCartBarOffset() {
+  /** h-20 is equal to the length of ViewCartBar.  */
   return <div className="h-20"></div>
 }
 
 function Card(props: any) {
   const item = props.item
+  const onAddClick = () => props.addToCart
 
   return (
     <div className="rounded-md border border-gray-300 bg-white p-4">
       <div style={{}} className="relative">
         <IconButton
-          onClick={() => props.addToCart(item.id)}
+          onClick={onAddClick}
           className="absolute! top-0 right-0 z-10 h-8 w-8 rounded-full bg-gray-300!"
         >
           <IconMuis className="text-white!" iconName="add" />

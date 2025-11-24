@@ -2,6 +2,7 @@ import { useGlobalState } from "@/stores/useGlobalState"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 export default function useCartItems() {
+  // note: remember array modifications do NOT trigger state changes.
   const [cartItems, _setCartItems] = useState<null | Array<
     Record<string, any>
   >>(null)
@@ -20,40 +21,14 @@ export default function useCartItems() {
     const list = JSON.parse(s)
     _setCartItems(list)
     prevCartItems.current = list
-    console.log("usecartitems: loaded cart from localstorage", list.length)
+    //console.log("usecartitems: loaded cart from localstorage", list.length)
     globalState.setCartItemsCount(list.length)
   }
-
-  useEffect(() => {
-    console.log("usecartitems: useeffect first render")
-    loadFromLocalStorage()
-  }, [])
-
-  const setCartItems:typeof _setCartItems = (valueOrReducer) => {
+  
+  const setCartItems: typeof _setCartItems = (valueOrReducer) => {
     loadFromLocalStorage()
     _setCartItems(valueOrReducer)
   }
-
-  // note: the only correct way to react to state changes
-  // and make a save elsewhere to use an useeffect.
-  // calling a function in add() and remove() won't ever work.
-  // because state updates are async, so the function invoke
-  // will see sad stale data.
-  //
-  // the ref check here is added to prevent the 1 redudant update
-  // to the localstorage as the 'cartitems' array is filled
-  // from the localstorage for the first time by the empty-deps
-  // effect.
-  //
-  // alhamdulillah. all works perfect.
-  useEffect(() => {
-    if (cartItems == null) return
-    if (prevCartItems.current == cartItems) return
-    window.localStorage.setItem("cartItems", JSON.stringify(cartItems))
-    globalState.setCartItemsCount(cartItems.length)
-    console.log("usecartitems: updating cart local storage", cartItems.length)
-    prevCartItems.current = cartItems
-  }, [cartItems])
 
   /**
    * note: the individual add and remove functions
@@ -91,22 +66,45 @@ export default function useCartItems() {
         copy[idx].quantity -= qty
         return copy
       } else {
-        // Remove the item if quantity after removal is 0 or less
+        // remove the item if quantity after removal is 0 or less
         copy.splice(idx, 1)
         return copy
       }
     })
   }, [])
 
-  // note: the returning object made up of list, add, remove, etc should be memoized so that users of this hook doesn't get a new object unless list, add, remove, etc *actually* changed.
-  let list = cartItems
-  if (cartItems == null) list = []
-  console.log(
-    "--- usecartitems: id-1, qty-",
-    list?.find((l) => l.id == 1)?.quantity,
-  )
-  const result = { list, add, remove, removeByQty }
-  // note: using Object.values() would be a horrible mistake.
-  //return useMemo(() => result, [...Object.values(result)])
-  return useMemo(() => result, [list, add, remove, removeByQty])
+  useEffect(() => {
+    //console.log("usecartitems: useeffect first render")
+    loadFromLocalStorage()
+  }, [])
+
+  // note: the only correct way to react to state changes
+  // and make a save elsewhere to use an useeffect.
+  // calling a function in add() and remove() won't ever work.
+  // because state updates are async, so the function invoke
+  // will see sad stale data.
+  //
+  // the ref check here is added to prevent the 1 redudant update
+  // to the localstorage as the 'cartitems' array is filled
+  // from the localstorage for the first time by the empty-deps
+  // effect.
+  //
+  // alhamdulillah. all works perfect.
+  useEffect(() => {
+    console.log("useCartItems: cartItems changed")
+    if (cartItems == null) return
+    if (prevCartItems.current == cartItems) return
+    window.localStorage.setItem("cartItems", JSON.stringify(cartItems))
+    globalState.setCartItemsCount(cartItems.length)
+    console.log("usecartitems: updating cart local storage", cartItems.length)
+    prevCartItems.current = cartItems
+  }, [cartItems])
+
+  // note: using Object.values() would be a horrible mistake, 
+  // because it would create a new object reference everytime.
+  return useMemo(() => {
+    // note
+    // remember array modifications do NOT trigger state changes.
+    return { list: cartItems || [], add, remove, removeByQty }
+  }, [cartItems])
 }
