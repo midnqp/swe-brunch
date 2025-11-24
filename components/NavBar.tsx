@@ -74,14 +74,16 @@ function Logo() {
   }, [])
 
   return (
-    <div className="w-full">
-      <Link className="flex" underline="none" href="/">
-        <p className="flex justify-center border-2 border-black p-0 font-mono text-4xl leading-none text-black">
-          SWE BRUNCH
-        </p>
-      </Link>
-      <div className="">
-        <p className="hidden text-sm md:block">{logoCaption}</p>
+    <div className="flex w-full">
+      <div>
+        <Link className="flex" underline="none" href="/">
+          <p className="flex justify-center border-2 border-black p-0 font-mono text-4xl leading-none text-black">
+            SWE BRUNCH
+          </p>
+        </Link>
+        <div className="">
+          <p className="hidden text-sm md:block">{logoCaption}</p>
+        </div>
       </div>
     </div>
   )
@@ -170,17 +172,17 @@ function CartDialog({ open, onClose, hasCartItems }: CartDialogProps) {
           )}
         </DialogContent>
 
-          <DialogActions className="flex! justify-center! py-4!">
-            {hasCartItems && (
-              <Button className="flex! rounded-full! bg-black! px-8! py-4! text-base! font-bold! text-white! normal-case!">
-                <span>Pay Tk 890 &nbsp;</span>{" "}
-                <IconMuis
-                  className="text-md!"
-                  iconName="arrow_right_alt"
-                ></IconMuis>
-              </Button>
-            )}
-          </DialogActions>
+        <DialogActions className="flex! justify-center! py-4!">
+          {hasCartItems && (
+            <Button className="flex! rounded-full! bg-black! px-8! py-4! text-base! font-bold! text-white! normal-case!">
+              <span>Pay Tk 890 &nbsp;</span>{" "}
+              <IconMuis
+                className="text-md!"
+                iconName="arrow_right_alt"
+              ></IconMuis>
+            </Button>
+          )}
+        </DialogActions>
       </Dialog>
     </div>
   )
