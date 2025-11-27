@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined");
 @import "tailwindcss";
+
 /* note: tailwind.config.js file is totally deprecated in v4. 
 and the official docs doesn't even mention it.
 */
@@ -15,13 +16,14 @@ and the official docs doesn't even mention it.
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  color-scheme: light dark;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-geist-sans, "Inter", "Helvetica Neue", Arial, sans-serif);
+  --font-mono: var(--font-geist-mono, "SFMono-Regular", Consolas, "Liberation Mono", monospace);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -34,7 +36,7 @@ and the official docs doesn't even mention it.
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
 
 @layer base {
@@ -44,4 +46,13 @@ body {
   h2 {
     @apply text-xl font-bold;
   }
+}
+
+.muis-icon-filled {
+  font-family: var(--font-muis-filled);
+  font-variation-settings:
+    "FILL" 1,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 48;
 }

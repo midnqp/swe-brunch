@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
+import localFont from 'next/font/local'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,6 +18,17 @@ export const metadata: Metadata = {
   description: "Software Engineer's Brunch",
 }
 
+/**
+ * note: i should have use react-icons the library. 
+ * that is a comprehensive and complete library.
+ * 
+ * but, i at least learned something :)
+ * 
+ * the lesson is, always search for an existing library 
+ * before starting anything!
+ */
+export const muisFillFont = localFont({src: '../public/muis.woff2',  variable: '--font-muis-filled'})
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -25,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${muisFillFont.variable} antialiased`}
         /**
          * note: this is the difference between fontName.variable and fontName.className.
          *
