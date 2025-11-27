@@ -3,8 +3,10 @@ import IconMuis from "@/components/IconMuis"
 import { PageLayout } from "@/components/PageLayout"
 import useCartItems from "@/hooks/useCartItems"
 import { useGlobalState } from "@/stores/useGlobalState"
-import { IconButton } from "@mui/material"
+import { IconButton, useMediaQuery, useTheme } from "@mui/material"
+import clsx from "clsx"
 import Image from "next/image"
+import { useEffect, useState } from "react"
 
 export default function BrowsePage() {
   const food = {
@@ -13,6 +15,7 @@ export default function BrowsePage() {
     price: 100,
     image: "/food.jpg",
     description:
+
       "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet",
   }
   const items = [
@@ -23,11 +26,16 @@ export default function BrowsePage() {
 
   const cartItems = useCartItems()
   const globalStateCartItemsCount = useGlobalState(
-    (state) => state.cartItemsCount,
+    (s) => s.cartItemsCount
   )
-  const shouldShowViewCartBar = globalStateCartItemsCount > 0
+  const isMobile = useMediaQuery(useTheme().breakpoints.down('md'))
+  const shouldShowViewCartBar = isMobile && globalStateCartItemsCount > 0
   const setCartModalOpen = useGlobalState((state) => state.setCartModalOpen)
   const addToCart = cartItems.add
+
+  useEffect(() => {
+    console.log('BrowsePage :: cartItems changed')
+  }, [cartItems])
 
   return (
     <PageLayout>
@@ -60,22 +68,38 @@ function MobileViewCartBarOffset() {
 }
 
 function Card(props: any) {
-  const item = props.item
-  const onAddClick = () => props.addToCart
+  console.log('Card :: rendering')
+  const item :any = props.item
+  //const [isAdded, setIsAdded] = useState(false)
+  const ci = props.cartItems.list.find((i:any) => i.id === item.id)
+  const isAdded = !!ci
+  const [hover, setHover] = useState(false)
+  const [isFavorited, setFavorited] = useState(false)
+  
+  const onAddClick = (id:any) => {
+    props.addToCart(id)
+    //setIsAdded(true)
+  }
+  const onFavoriteClick = (id:any) => {
+    // todo: handle
+    setFavorited(prev => !prev)
+  }
 
   return (
     <div className="rounded-md border border-gray-300 bg-white p-4">
       <div style={{}} className="relative">
         <IconButton
-          onClick={onAddClick}
-          className="absolute! top-0 right-0 z-10 h-8 w-8 rounded-full bg-gray-300!"
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+          onClick={() => onAddClick(item.id)}
+          className={clsx("absolute! top-0 right-0 z-10 h-8 w-8 rounded-full ", !hover? 'bg-black!' : 'bg-gray-300!')}
         >
-          <IconMuis className="text-white!" iconName="add" />
+          {!hover && <span className="text-white! text-base! ">{ci?.quantity || '0'}</span>}
+          {hover && <IconMuis className="text-white!" iconName={"add"} />}
         </IconButton>
-        {/** todo: add the import the font files locally with custom font-name, then do the fill. */}
-        {/*<IconButton className="absolute! bg-gray-300! rounded-full  h-8 w-8 top-0 right-0 mr-10! z-10">
-          <IconMuis className="filled" iconName="favorite" />
-        </IconButton> */}
+        <IconButton onClick={() => onFavoriteClick(item.id)} className="absolute! bg-gray-300! rounded-full  h-8 w-8 top-0 right-0 mr-10! z-10">
+          <IconMuis className={clsx({"text-white! muis-icon-filled": isFavorited, 'text-white!': !isFavorited})} iconName="favorite" />
+        </IconButton> 
       </div>
       {/** tip: how to work with next's image compo. */}
       <div className="relative h-48 w-full">
