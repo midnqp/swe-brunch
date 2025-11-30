@@ -15,7 +15,6 @@ export default function BrowsePage() {
     price: 100,
     image: "/food.jpg",
     description:
-
       "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet",
   }
   const items = [
@@ -25,16 +24,14 @@ export default function BrowsePage() {
   ]
 
   const cartItems = useCartItems()
-  const globalStateCartItemsCount = useGlobalState(
-    (s) => s.cartItemsCount
-  )
-  const isMobile = useMediaQuery(useTheme().breakpoints.down('md'))
+  const globalStateCartItemsCount = useGlobalState((s) => s.cartItemsCount)
+  const isMobile = useMediaQuery(useTheme().breakpoints.down("md"))
   const shouldShowViewCartBar = isMobile && globalStateCartItemsCount > 0
   const setCartModalOpen = useGlobalState((state) => state.setCartModalOpen)
   const addToCart = cartItems.add
 
   useEffect(() => {
-    console.log('BrowsePage :: cartItems changed')
+    console.log("BrowsePage :: cartItems changed")
   }, [cartItems])
 
   return (
@@ -68,38 +65,54 @@ function MobileViewCartBarOffset() {
 }
 
 function Card(props: any) {
-  console.log('Card :: rendering')
-  const item :any = props.item
+  console.log("Card :: rendering")
+  const item: any = props.item
   //const [isAdded, setIsAdded] = useState(false)
-  const ci = props.cartItems.list.find((i:any) => i.id === item.id)
+  const ci = props.cartItems.list.find((i: any) => i.id === item.id)
   const isAdded = !!ci
   const [hover, setHover] = useState(false)
   const [isFavorited, setFavorited] = useState(false)
-  
-  const onAddClick = (id:any) => {
+
+  const onAddClick = (id: any) => {
     props.addToCart(id)
     //setIsAdded(true)
   }
-  const onFavoriteClick = (id:any) => {
+  const onFavoriteClick = (id: any) => {
     // todo: handle
-    setFavorited(prev => !prev)
+    setFavorited((prev) => !prev)
   }
 
   return (
     <div className="rounded-md border border-gray-300 bg-white p-4">
       <div style={{}} className="relative">
         <IconButton
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
           onClick={() => onAddClick(item.id)}
-          className={clsx("absolute! top-0 right-0 z-10 h-8 w-8 rounded-full ", !hover? 'bg-black!' : 'bg-gray-300!')}
+          className={clsx(
+            "absolute! top-0 right-0 z-10 h-8 w-8 rounded-full",
+            !hover ? "bg-black!" : "bg-gray-300!",
+          )}
         >
-          {!hover && <span className="text-white! text-base! ">{ci?.quantity || '0'}</span>}
+          {!hover && (
+            <span className="text-base! text-white!">
+              {ci?.quantity || "0"}
+            </span>
+          )}
           {hover && <IconMuis className="text-white!" iconName={"add"} />}
         </IconButton>
-        <IconButton onClick={() => onFavoriteClick(item.id)} className="absolute! bg-gray-300! rounded-full  h-8 w-8 top-0 right-0 mr-10! z-10">
-          <IconMuis className={clsx({"text-white! muis-icon-filled": isFavorited, 'text-white!': !isFavorited})} iconName="favorite" />
-        </IconButton> 
+        <IconButton
+          onClick={() => onFavoriteClick(item.id)}
+          className="absolute! top-0 right-0 z-10 mr-10! h-8 w-8 rounded-full bg-gray-300!"
+        >
+          <IconMuis
+            className={clsx({
+              "muis-icon-filled text-white!": isFavorited,
+              "text-white!": !isFavorited,
+            })}
+            iconName="favorite"
+          />
+        </IconButton>
       </div>
       {/** tip: how to work with next's image compo. */}
       <div className="relative h-48 w-full">

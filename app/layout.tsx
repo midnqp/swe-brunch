@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
-import localFont from 'next/font/local'
+import localFont from "next/font/local"
+import {RunOnce} from './_runOnce'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,15 +20,18 @@ export const metadata: Metadata = {
 }
 
 /**
- * note: i should have use react-icons the library. 
+ * note: i should have use react-icons the library.
  * that is a comprehensive and complete library.
- * 
+ *
  * but, i at least learned something :)
- * 
- * the lesson is, always search for an existing library 
+ *
+ * the lesson is, always search for an existing library
  * before starting anything!
  */
-export const muisFillFont = localFont({src: '../public/muis.woff2',  variable: '--font-muis-filled'})
+export const muisFillFont = localFont({
+  src: "../public/muis.woff2",
+  variable: "--font-muis-filled",
+})
 
 export default function RootLayout({
   children,
@@ -49,6 +53,7 @@ export default function RootLayout({
          */
         style={{ fontFamily: "var(--font-geist-sans)" }}
       >
+        <RunOnce />
         {children}
       </body>
     </html>

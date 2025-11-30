@@ -3,10 +3,6 @@ import { useMediaQuery, useTheme } from "@mui/material"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 export default function useCartItems() {
-  // note: remember array modifications do NOT trigger state changes.
-  const [cartItems, _setCartItems] = useState<null | Array<
-    Record<string, any>
-  >>(null)
   const prevCartItems = useRef<any>(null)
   // note: using selector to only get the setter function,
   // prevents a re-render caused by the globalState.cartItemsCount
@@ -15,20 +11,15 @@ export default function useCartItems() {
   // now, alhamdulillah, this component only renders once when the add()
   // function is called.
   const setCartItemsCount = useGlobalState((state) => state.setCartItemsCount)
-  const setCartModalOpen = useGlobalState(state => state.setCartModalOpen)
+  const setCartModalOpen = useGlobalState((state) => state.setCartModalOpen)
   const globalState = { setCartItemsCount, setCartModalOpen }
-  const isMobile = useMediaQuery(useTheme().breakpoints.down('md'))
+  const isMobile = useMediaQuery(useTheme().breakpoints.down("md"))
   const isDesktop = !isMobile
-
-  const setCartItems: typeof _setCartItems = (valueOrReducer) => {
-    _setCartItems(valueOrReducer)
-    /*_setCartItems((prev) => {
-      const s = window.localStorage.getItem("cartItems") || "[]"
-      const list = JSON.parse(s)
-      const updated = typeof valueOrReducer == 'function' ? valueOrReducer(list) : list
-      //window.localStorage.setItem("cartItems", JSON.stringify(updated))
-      return updated
-    }) */
+  const cartItems = useGlobalState((s) => s.cartItems)
+  const _setCartItems = useGlobalState((s) => s.setCartItems)
+  const setCartItems = (items: typeof cartItems) => {
+    _setCartItems(items)
+    window.localStorage.setItem("cartItems", JSON.stringify(items))
   }
 
   /**
@@ -39,52 +30,42 @@ export default function useCartItems() {
    * object {add, remove, list} will be a new object.
    */
   const add = useCallback((id: any) => {
-    setCartItems((prev) => {
-      prev = prev!
-      const idx = prev.findIndex((ci) => ci.id == id)
-      if (idx === -1) {
-        return [...prev, { id: id, quantity: 1 }]
-      } else {
-        const copy = [...prev]
-        copy[idx].quantity = copy[idx].quantity + 1
-        return copy
-      }
-    })
-  }, [setCartItems])
+    let result: typeof cartItems
+    const copy = [...cartItems]
+    const idx = copy.findIndex((ci) => ci.id == id)
+
+    if (idx === -1) {
+      result = [...copy, { id: id, quantity: 1 }]
+    } else {
+      copy[idx].quantity = copy[idx].quantity + 1
+      result = copy
+    }
+
+    setCartItems(result)
+  }, [cartItems])
 
   const remove = useCallback((id: any) => {
-    setCartItems((prev) => prev!.filter((p) => p.id != id))
-  }, [setCartItems])
+    const result = cartItems.filter((p) => p.id != id)
+    setCartItems(result)
+  }, [cartItems])
 
   const removeByQty = useCallback((id: any, qty: number) => {
-    setCartItems((prev) => {
-      prev = prev!
-      const idx = prev.findIndex((p) => p.id === id)
-      if (idx === -1) return prev
+    let result: typeof cartItems
+    const copy = [...cartItems]
 
-      const copy = [...prev]
-      if (copy[idx].quantity > qty) {
-        copy[idx].quantity -= qty
-        return copy
-      } else {
-        // remove the item if quantity after removal is 0 or less
-        copy.splice(idx, 1)
-        return copy
-      }
-    })
-  }, [setCartItems])
+    const idx = cartItems.findIndex((p) => p.id === id)
+    if (idx === -1) return cartItems
+    if (copy[idx].quantity > qty) {
+      copy[idx].quantity -= qty
+      result = copy
+    } else {
+      // remove the item if quantity after removal is 0 or less
+      copy.splice(idx, 1)
+      result = copy
+    }
 
-  useEffect(() => {
-    //console.log("usecartitems: useeffect first render")
-    //loadFromLocalStorage()
-
-
-    const s = window.localStorage.getItem("cartItems") || "[]"
-    const list = JSON.parse(s)
-    _setCartItems(list)
-    prevCartItems.current = list
-    globalState.setCartItemsCount(list.length)
-  }, [])
+    setCartItems(result)
+  }, [cartItems])
 
   // note: the only correct way to react to state changes
   // and make a save elsewhere to use an useeffect.
@@ -98,27 +79,15 @@ export default function useCartItems() {
   // effect.
   //
   // alhamdulillah. all works perfect.
-  useEffect(() => {
-    console.log("useCartItems: cartItems changed")
-    if (cartItems == null) return
-    if (prevCartItems.current == cartItems) return
-    window.localStorage.setItem("cartItems", JSON.stringify(cartItems))
-    globalState.setCartItemsCount(cartItems.length)
-    console.log("usecartitems: updating cart local storage", cartItems.length)
-    if (isDesktop && cartItems.length == 1 && prevCartItems.current.length == 0) globalState.setCartModalOpen(true)
-    prevCartItems.current = cartItems
-  }, [cartItems])
+  //
+  // (code removed.)
 
-  // note: using Object.values() would be a horrible mistake, 
+  // note: using Object.values() with useMemo during a return from a hook
+  // would be a horrible mistake,
   // because it would create a new object reference everytime.
-  /*return useMemo(() => {
-    console.log('useCartItems :: returning new memoized object')
-    // note
-    // remember array modifications do NOT trigger state changes.
-    return { list: cartItems || [], add, remove, removeByQty }
-  }, [cartItems])
-  */
- let __cartItems : any = cartItems
- if (__cartItems == null) __cartItems = []
- return {list: __cartItems, add, remove, removeByQty}
+  // 
+  // (code removed.)
+
+
+  return ({ list: cartItems, add, remove, removeByQty })
 }
