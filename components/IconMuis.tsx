@@ -7,9 +7,13 @@ import clsx from "clsx"
 export default function IconMuis(props: {
   iconName: string
   className?: string
+  onClick?: () => void
 }) {
   return (
-    <span className={`material-symbols-outlined ${clsx(props.className)}`}>
+    <span
+      onClick={props.onClick}
+      className={`material-symbols-outlined ${clsx(props.className)}`}
+    >
       {props.iconName}
     </span>
   )

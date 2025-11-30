@@ -1,12 +1,19 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist,Geist_Mono, 
+  //Poppins as Geist, 
+  //Montserrat as Geist ,
+  //Fredoka as Geist,
+  
+  
+} from "next/font/google"
 import "./globals.css"
 import localFont from "next/font/local"
-import {RunOnce} from './_runOnce'
+import { RunOnce } from "./_runOnce"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  weight: ["400", "700"],
 })
 
 const geistMono = Geist_Mono({
@@ -15,8 +22,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "SWE Brunch",
-  description: "Software Engineer's Brunch",
+  title: "SWE Brunch — Software Engineer's Brunch",
+  description: "",
 }
 
 /**

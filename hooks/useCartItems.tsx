@@ -29,43 +29,52 @@ export default function useCartItems() {
    * a new function will declared and the returning
    * object {add, remove, list} will be a new object.
    */
-  const add = useCallback((id: any) => {
-    let result: typeof cartItems
-    const copy = [...cartItems]
-    const idx = copy.findIndex((ci) => ci.id == id)
+  const add = useCallback(
+    (id: any) => {
+      let result: typeof cartItems
+      const copy = [...cartItems]
+      const idx = copy.findIndex((ci) => ci.id == id)
 
-    if (idx === -1) {
-      result = [...copy, { id: id, quantity: 1 }]
-    } else {
-      copy[idx].quantity = copy[idx].quantity + 1
-      result = copy
-    }
+      if (idx === -1) {
+        result = [...copy, { id: id, quantity: 1 }]
+      } else {
+        copy[idx].quantity = copy[idx].quantity + 1
+        result = copy
+      }
 
-    setCartItems(result)
-  }, [cartItems])
+      setCartItems(result)
+    },
+    [cartItems],
+  )
 
-  const remove = useCallback((id: any) => {
-    const result = cartItems.filter((p) => p.id != id)
-    setCartItems(result)
-  }, [cartItems])
+  const remove = useCallback(
+    (id: any) => {
+      const result = cartItems.filter((p) => p.id != id)
+      setCartItems(result)
+    },
+    [cartItems],
+  )
 
-  const removeByQty = useCallback((id: any, qty: number) => {
-    let result: typeof cartItems
-    const copy = [...cartItems]
+  const removeByQty = useCallback(
+    (id: any, qty: number) => {
+      let result: typeof cartItems
+      const copy = [...cartItems]
 
-    const idx = cartItems.findIndex((p) => p.id === id)
-    if (idx === -1) return cartItems
-    if (copy[idx].quantity > qty) {
-      copy[idx].quantity -= qty
-      result = copy
-    } else {
-      // remove the item if quantity after removal is 0 or less
-      copy.splice(idx, 1)
-      result = copy
-    }
+      const idx = cartItems.findIndex((p) => p.id === id)
+      if (idx === -1) return cartItems
+      if (copy[idx].quantity > qty) {
+        copy[idx].quantity -= qty
+        result = copy
+      } else {
+        // remove the item if quantity after removal is 0 or less
+        copy.splice(idx, 1)
+        result = copy
+      }
 
-    setCartItems(result)
-  }, [cartItems])
+      setCartItems(result)
+    },
+    [cartItems],
+  )
 
   // note: the only correct way to react to state changes
   // and make a save elsewhere to use an useeffect.
@@ -85,9 +94,8 @@ export default function useCartItems() {
   // note: using Object.values() with useMemo during a return from a hook
   // would be a horrible mistake,
   // because it would create a new object reference everytime.
-  // 
+  //
   // (code removed.)
 
-
-  return ({ list: cartItems, add, remove, removeByQty })
+  return { list: cartItems, add, remove, removeByQty }
 }

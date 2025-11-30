@@ -6,7 +6,7 @@ type GlobalState = {
   isCartModalOpen: boolean
   setCartModalOpen: (value: boolean) => void
   cartItems: Array<{ id: any; quantity: number }>
-  setCartItems: (value: GlobalState['cartItems']) => void
+  setCartItems: (value: GlobalState["cartItems"]) => void
 }
 
 export const useGlobalState = create<GlobalState>(
@@ -20,9 +20,7 @@ export const useGlobalState = create<GlobalState>(
       setCartModalOpen: (value) => set({ isCartModalOpen: value }),
 
       cartItems: [],
-      setCartItems: (value) => 
-
-        set({ cartItems: value, cartItemsCount: value.length })
-      ,
+      setCartItems: (value) =>
+        set({ cartItems: value, cartItemsCount: value.length }),
     }) as const,
 )
