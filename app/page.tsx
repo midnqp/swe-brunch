@@ -82,6 +82,8 @@ function Card(props: any) {
     setFavorited((prev) => !prev)
   }
 
+  const shouldShowItemQty = isAdded && !hover
+
   return (
     <div className="rounded-md border border-gray-300 bg-white p-4">
       <div style={{}} className="relative">
@@ -91,15 +93,14 @@ function Card(props: any) {
           onClick={() => onAddClick(item.id)}
           className={clsx(
             "absolute! top-0 right-0 z-10 h-8 w-8 rounded-full",
-            !hover ? "bg-black!" : "bg-gray-300!",
+            shouldShowItemQty ? "bg-black!" : "bg-gray-300!",
           )}
         >
-          {!hover && (
+          {shouldShowItemQty ? (
             <span className="text-base! text-white!">
-              {ci?.quantity || "0"}
-            </span>
-          )}
-          {hover && <IconMuis className="text-white!" iconName={"add"} />}
+              {ci.quantity}
+            </span> 
+          ): <IconMuis className="text-white!" iconName={"add"} />}
         </IconButton>
         <IconButton
           onClick={() => onFavoriteClick(item.id)}
