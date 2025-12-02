@@ -10,20 +10,6 @@ import Image from "next/image"
 import { useEffect, useState } from "react"
 
 export default function BrowsePage() {
-  const food = {
-    id: 1,
-    name: "Item 1",
-    price: 100,
-    image: "/food.jpg",
-    description:
-      "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet",
-  }
-  const _items = [
-    food,
-    { ...food, id: 2, name: "Item 2", price: 49.99 },
-    { ...food, id: 3, name: "Item 3", price: 149.99 },
-  ]
-
   const products = backendApis.listEngineersItems()
 
   const cartItems = useCartItems()
@@ -31,18 +17,23 @@ export default function BrowsePage() {
   const isMobile = useMediaQuery(useTheme().breakpoints.down("md"))
   const shouldShowViewCartBar = isMobile && globalStateCartItemsCount > 0
   const setCartModalOpen = useGlobalState((state) => state.setCartModalOpen)
-  const addToCart = cartItems.add
+  const addToCart = (id: any) => {
+    if (!isMobile && cartItems.list.length === 0) setCartModalOpen(true)
+    cartItems.add(id)
+  }
 
   useEffect(() => {
     console.log("BrowsePage :: cartItems changed")
   }, [cartItems])
 
-  const menus = [{
-    name: "Software Engineer's Brunch",
-    description: 'For those who write code. Meals optimized for protein and sustained anchoring in the desk.',
-    products: products
-  },
-  {
+  const menus = [
+    {
+      name: "Software Engineer's Brunch",
+      description:
+        "For those who write code. Meals optimized for protein and sustained anchoring in the desk.",
+      products: products,
+    },
+    /*{
     name: "Product Manager's Brunch",
     description: `'High-impact' and 'customer-centric' cuisines. If your team has delivered before deadline, treat them with an 1:6.`,
     products: products
@@ -51,29 +42,32 @@ export default function BrowsePage() {
     name: "Founder's Brunch",
     description: 'Wide variety of choices. Pick yours based on your remaining runway.',
     products: products
-  }
-]
+  } */
+  ]
 
   return (
     <PageLayout>
       <h1 className="mt-8 text-4xl">Browse Your Taste</h1>
-      
-      {menus.map (m => <div className="mt-24"><div className="mb-8">
-        <h2 className=" text-gray-600">{m.name}</h2>
-        <div className="text-gray-400 text-sm"> {m.description} </div>
-      </div>
 
-      <div
-        className={clsx(
-          "mb-4 grid grid-cols-1 gap-4 md:grid-cols-4",
-          false && "justify-items-center",
-        )}
-      >
-        {m.products.map((item, idx) => (
-          <Card key={idx} {...{ cartItems, addToCart, item }} />
-        ))}
-      </div> </div>)}
-      
+      {menus.map((m, idx) => (
+        <div key={idx} className="mt-24">
+          <div className="mb-8">
+            <h2 className="text-gray-600">{m.name}</h2>
+            <div className="text-sm text-gray-400"> {m.description} </div>
+          </div>
+          <div
+            className={clsx(
+              "mb-4 grid grid-cols-1 gap-4 md:grid-cols-4",
+              false && "justify-items-center",
+            )}
+          >
+            {m.products.map((item, idx) => (
+              <Card key={idx} {...{ cartItems, addToCart, item }} />
+            ))}
+          </div>{" "}
+        </div>
+      ))}
+
       {shouldShowViewCartBar && (
         <MobileViewCartBar
           totalLabel="Tk 200"
@@ -83,7 +77,6 @@ export default function BrowsePage() {
         />
       )}
 
-      {shouldShowViewCartBar && <MobileViewCartBarOffset />}
     </PageLayout>
   )
 }
@@ -111,7 +104,6 @@ function Card(props: any) {
         setHover(false)
       }, 1000)
     } */
-    //setIsAdded(true)
   }
   const onFavoriteClick = (id: any) => {
     const favoritedItems = JSON.parse(
@@ -144,7 +136,7 @@ function Card(props: any) {
         <div className="absolute! top-0 right-0 z-10 flex gap-2 p-4 md:pt-2 md:pr-2">
           <IconButton
             onClick={() => onFavoriteClick(item.id)}
-            className="h-10 w-10 rounded-full bg-gray-300! md:h-8 md:w-8 "
+            className="h-10 w-10 rounded-full bg-gray-300! md:h-8 md:w-8"
           >
             <IconMuis
               className={clsx("", {
@@ -160,8 +152,8 @@ function Card(props: any) {
             onPointerLeave={() => setHover(false)}
             onClick={() => onAddClick(item.id)}
             className={clsx(
-              "h-10 w-10 rounded-full md:h-8 md:w-8 shadow-2xl! ",
-              shouldShowItemQty ? "bg-black!" : "bg-gray-300! ",
+              "h-10 w-10 rounded-full shadow-2xl! md:h-8 md:w-8",
+              shouldShowItemQty ? "bg-black!" : "bg-gray-300!",
             )}
           >
             {shouldShowItemQty ? (
