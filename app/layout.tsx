@@ -1,10 +1,10 @@
 import type { Metadata } from "next"
-import { Geist,Geist_Mono, 
-  //Poppins as Geist, 
+import {
+  Geist,
+  Geist_Mono,
+  //Poppins as Geist,
   //Montserrat as Geist ,
   //Fredoka as Geist,
-  
-  
 } from "next/font/google"
 import "./globals.css"
 import localFont from "next/font/local"

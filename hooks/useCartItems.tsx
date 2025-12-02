@@ -10,11 +10,6 @@ export default function useCartItems() {
   //
   // now, alhamdulillah, this component only renders once when the add()
   // function is called.
-  const setCartItemsCount = useGlobalState((state) => state.setCartItemsCount)
-  const setCartModalOpen = useGlobalState((state) => state.setCartModalOpen)
-  const globalState = { setCartItemsCount, setCartModalOpen }
-  const isMobile = useMediaQuery(useTheme().breakpoints.down("md"))
-  const isDesktop = !isMobile
   const cartItems = useGlobalState((s) => s.cartItems)
   const _setCartItems = useGlobalState((s) => s.setCartItems)
   const setCartItems = (items: typeof cartItems) => {

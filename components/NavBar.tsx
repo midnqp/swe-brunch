@@ -29,9 +29,11 @@ export function NavBar() {
         <Logo />
       </div>
       <div className="flex w-[20%] items-center justify-end">
-        <IconButton className="mr-4">
-          <IconMuis className="" iconName="dark_mode" />
-        </IconButton>
+        {false && (
+          <IconButton className="mr-4">
+            <IconMuis className="" iconName="dark_mode" />
+          </IconButton>
+        )}
 
         <IconButton
           onClick={() => {
@@ -52,7 +54,7 @@ export function NavBar() {
   )
 }
 
-function Logo() {
+export function Logo(props: { captions?: boolean }) {
   const [logoCaptionIdx, setLogoCaptionIdx] = useState(0)
   const list = [
     `Missed breakfast today? We did too.`,
@@ -62,6 +64,7 @@ function Logo() {
   ]
   const logoCaption = list[logoCaptionIdx]
   useEffect(() => {
+    if (props.captions === false) return
     const id = setInterval(() => {
       setLogoCaptionIdx((prev) => {
         if (prev == list.length - 1) return 0
@@ -81,9 +84,11 @@ function Logo() {
             SWE BRUNCH
           </p>
         </Link>
-        <div className="">
-          <p className="hidden text-sm md:block">{logoCaption}</p>
-        </div>
+        {props.captions !== false && (
+          <div className="">
+            <p className="hidden text-sm md:block">{logoCaption}</p>
+          </div>
+        )}
       </div>
     </div>
   )
