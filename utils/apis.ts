@@ -12,34 +12,34 @@ const backendApis = {
         name: "Cheese Mushroom Omelette",
         price: 449,
         image: "/cheese-omlette.jpg",
-        description: "",
+        description:
+          "Prepared with egg stuffed with mushrooms & cheese, serve with bread toast, tomato, lettuce & sauce.",
       },
       {
         id: "eng-2",
         name: "American Breakfast",
         price: 699,
         image: "/american-breakfast.jpg",
-        description: "",
+        description:
+          "Consists of 2 pcs chicken salami, 2 pcs pancake, scrambled egg—served with butter & jam.",
       },
       {
         id: "eng-3",
         name: "Beef Burger",
         price: 699,
         image: "/beef-burger.jpg",
-        description: "",
+        description:
+          "Prepared with beef patty, sliced cheese, lettuce, tomato & onion.",
       },
       {
         id: "eng-4",
         name: "Cappucino",
         price: "249",
         image: "/cappucino.jpg",
-        description: "",
+        description:
+          "A delightful blend of espresso, steamed milk & thick milk foam, creating a creamy, frothy texture.",
       },
-    ].map((e) => {
-      e.description =
-        "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet"
-      return e
-    })
+    ]
   },
   listProductManagersItems() {},
   listFoundersItems() {},

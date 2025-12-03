@@ -53,6 +53,14 @@ function Footer() {
       label: "Backend architecture notes (coming soon)",
       href: "",
     }, */
+    {
+      label: "Recent changes",
+      href: "https://github.com/midnqp/swe-brunch/blob/production/CHANGELOG.md",
+    },
+    {
+      label: "Project architecture (coming soon)",
+      href: "",
+    },
   ]
   const supportLinks = [
     { label: "Privacy Policy", href: "/privacy" },

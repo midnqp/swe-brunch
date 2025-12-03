@@ -4,14 +4,13 @@ import { PageLayout } from "@/components/PageLayout"
 import useCartItems from "@/hooks/useCartItems"
 import { useGlobalState } from "@/stores/useGlobalState"
 import backendApis from "@/utils/apis"
-import { IconButton, useMediaQuery, useTheme } from "@mui/material"
+import { IconButton, Tooltip, useMediaQuery, useTheme } from "@mui/material"
 import clsx from "clsx"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 
 export default function BrowsePage() {
   const products = backendApis.listEngineersItems()
-
   const cartItems = useCartItems()
   const globalStateCartItemsCount = useGlobalState((s) => s.cartItemsCount)
   const isMobile = useMediaQuery(useTheme().breakpoints.down("md"))
@@ -76,7 +75,6 @@ export default function BrowsePage() {
           }}
         />
       )}
-
     </PageLayout>
   )
 }
@@ -134,34 +132,38 @@ function Card(props: any) {
     <div className="overflow-hidden rounded-md border border-gray-300 bg-white">
       <div style={{}} className="relative">
         <div className="absolute! top-0 right-0 z-10 flex gap-2 p-4 md:pt-2 md:pr-2">
-          <IconButton
-            onClick={() => onFavoriteClick(item.id)}
-            className="h-10 w-10 rounded-full bg-gray-300! md:h-8 md:w-8"
-          >
-            <IconMuis
-              className={clsx("", {
-                "muis-icon-filled text-red-600!": isFavorited,
-                "text-white!": !isFavorited,
-              })}
-              iconName="favorite"
-            />
-          </IconButton>
-          <IconButton
-            // note: using onMouseEnter fails miserably on mobile.
-            onPointerEnter={() => setHover(true)}
-            onPointerLeave={() => setHover(false)}
-            onClick={() => onAddClick(item.id)}
-            className={clsx(
-              "h-10 w-10 rounded-full shadow-2xl! md:h-8 md:w-8",
-              shouldShowItemQty ? "bg-black!" : "bg-gray-300!",
-            )}
-          >
-            {shouldShowItemQty ? (
-              <p className="text-base! text-white!">{ci.quantity}</p>
-            ) : (
-              <IconMuis className="text-white!" iconName={"add"} />
-            )}
-          </IconButton>
+          <Tooltip arrow title={isFavorited ? "Unsave" : "Save for later"}>
+            <IconButton
+              onClick={() => onFavoriteClick(item.id)}
+              className="h-10 w-10 rounded-full bg-gray-300! md:h-8 md:w-8"
+            >
+              <IconMuis
+                className={clsx("", {
+                  "muis-icon-filled text-red-600!": isFavorited,
+                  "text-white!": !isFavorited,
+                })}
+                iconName="favorite"
+              />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Eat this now!" arrow>
+            <IconButton
+              // note: using onMouseEnter fails miserably on mobile.
+              onPointerEnter={() => setHover(true)}
+              onPointerLeave={() => setHover(false)}
+              onClick={() => onAddClick(item.id)}
+              className={clsx(
+                "h-10 w-10 rounded-full shadow-2xl! md:h-8 md:w-8",
+                shouldShowItemQty ? "bg-black!" : "bg-gray-300!",
+              )}
+            >
+              {shouldShowItemQty ? (
+                <p className="text-base! text-white!">{ci.quantity}</p>
+              ) : (
+                <IconMuis className="text-white!" iconName={"add"} />
+              )}
+            </IconButton>
+          </Tooltip>
         </div>
       </div>
       {/** tip: how to work with next's image compo. */}

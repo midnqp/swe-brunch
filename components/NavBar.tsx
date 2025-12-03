@@ -86,7 +86,9 @@ export function Logo(props: { captions?: boolean }) {
         </Link>
         {props.captions !== false && (
           <div className="">
-            <p className="hidden text-sm md:block">{logoCaption}</p>
+            <p className="hidden text-sm text-gray-400 md:block">
+              {logoCaption}
+            </p>
           </div>
         )}
       </div>
@@ -166,12 +168,13 @@ function CartDialog({ open, onClose, hasCartItems }: CartDialogProps) {
 
           {!hasCartItems && (
             <div className="flex h-full w-full items-center justify-center select-none">
-              <div className="">
+              <div className="*:flex! *:justify-center!">
                 <IconMuis
-                  className="flex! justify-center! text-7xl! text-gray-400!"
+                  className="text-7xl! text-gray-400!"
                   iconName="shopping_cart"
                 />
                 <p className="text-gray-400">Cart is empty</p>
+                <p className="text-gray-300">Aren't you hungry?</p>
               </div>{" "}
             </div>
           )}
