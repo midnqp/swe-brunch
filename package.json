@@ -1,6 +1,6 @@
 {
   "name": "swe-brunch",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "dev": "nodemon -w .nodemonrestart --exec 'next dev'",
@@ -9,7 +9,7 @@
     "_lint": "prettier --log-level error -w ./app ./components ./hooks ./stores ./utils",
     "prepare": "husky",
     "release": "commit-and-tag-version",
-    "release:undo": "git tag -d $(git tag --sort=-creatordate | head -n 1); git reset --soft HEAD~1; git restore CHANGELOG.md",
+    "release:undo": "git tag -d $(git tag --sort=-creatordate | head -n 1); git reset --hard HEAD~1",
     "release:major": "commit-and-tag-version -r major"
   },
   "dependencies": {
