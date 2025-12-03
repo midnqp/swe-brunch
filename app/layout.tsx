@@ -9,6 +9,7 @@ import {
 import "./globals.css"
 import localFont from "next/font/local"
 import { RunOnce } from "./_runOnce"
+import { Analytics } from "@vercel/analytics/next"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -62,6 +63,7 @@ export default function RootLayout({
       >
         <RunOnce />
         {children}
+        <Analytics />
       </body>
     </html>
   )
