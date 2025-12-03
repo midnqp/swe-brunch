@@ -2,34 +2,6 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
-## [1.0.0](https://github.com/midnqp/swe-brunch/compare/v0.1.1...v1.0.0) (2025-12-03)
-
-
-### Features
-
-* add tooltip for Card buttons ([e67df6a](https://github.com/midnqp/swe-brunch/commit/e67df6a834c8aea7832912a84ccfc70650a8c605))
-
-## [0.1.4](https://github.com/midnqp/swe-brunch/compare/v0.1.1...v0.1.4) (2025-12-03)
-
-
-### Features
-
-* add tooltip for Card buttons ([e67df6a](https://github.com/midnqp/swe-brunch/commit/e67df6a834c8aea7832912a84ccfc70650a8c605))
-
-## [0.1.3](https://github.com/midnqp/swe-brunch/compare/v0.1.1...v0.1.3) (2025-12-03)
-
-
-### Features
-
-* add tooltip for Card buttons ([e67df6a](https://github.com/midnqp/swe-brunch/commit/e67df6a834c8aea7832912a84ccfc70650a8c605))
-
-## [0.1.2](https://github.com/midnqp/swe-brunch/compare/v0.1.1...v0.1.2) (2025-12-03)
-
-
-### Features
-
-* add tooltip for Card buttons ([e67df6a](https://github.com/midnqp/swe-brunch/commit/e67df6a834c8aea7832912a84ccfc70650a8c605))
-
 ## 0.1.1 (2025-12-03)
 
 
