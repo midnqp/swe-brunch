@@ -35,17 +35,16 @@ export function NavBar() {
           </IconButton>
         )}
 
-        {false && (
-          <IconButton
-            onClick={() => {
-              setCartModalOpen(true)
-            }}
-          >
-            <Badge badgeContent={cartItemsCount} color="warning">
-              <IconMuis iconName="local_mall" />
-            </Badge>
-          </IconButton>
-        )}
+        <IconButton
+          onClick={() => {
+            setCartModalOpen(true)
+          }}
+        >
+          <Badge badgeContent={cartItemsCount} color="warning">
+            <IconMuis iconName="local_mall" />
+          </Badge>
+        </IconButton>
+
         <CartDialog
           open={isCartModalOpen}
           onClose={() => setCartModalOpen(false)}

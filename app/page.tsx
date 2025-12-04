@@ -146,7 +146,7 @@ function Card(props: any) {
               />
             </IconButton>
           </Tooltip>
-          {/*<Tooltip title="Eat this now!" arrow>
+          <Tooltip title="Eat this now!" arrow>
             <IconButton
               // note: using onMouseEnter fails miserably on mobile.
               onPointerEnter={() => setHover(true)}
@@ -163,7 +163,7 @@ function Card(props: any) {
                 <IconMuis className="text-white!" iconName={"add"} />
               )}
             </IconButton>
-          </Tooltip>*/}
+          </Tooltip>
         </div>
       </div>
       {/** tip: how to work with next's image compo. */}
