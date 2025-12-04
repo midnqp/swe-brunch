@@ -17,6 +17,7 @@ import IconMuis from "./IconMuis"
 import { CartItems } from "./Cart"
 import useCartItems from "@/hooks/useCartItems"
 import backendApis from "@/utils/apis"
+import { useRouter } from "next/navigation"
 
 export function NavBar() {
   const cartItemsCount = useGlobalState((state) => state.cartItemsCount)
@@ -105,6 +106,7 @@ type CartDialogProps = {
 }
 
 function CartDialog({ open, onClose, hasCartItems }: CartDialogProps) {
+  const router = useRouter()
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"))
   const subtotal = useCartItems().list.reduce((prev, curr) => {
@@ -116,6 +118,12 @@ function CartDialog({ open, onClose, hasCartItems }: CartDialogProps) {
   const serviceFreeCost = 17
   const deliveryCost = 24
   const grandTotal = subtotal + serviceFreeCost + deliveryCost
+
+  const onPayClick = () => {
+    // todo: skipped the address, payment card, etc for now.
+    router.push("/thanks")
+  }
+
   return (
     <div className="relative">
       <Dialog
@@ -193,7 +201,10 @@ function CartDialog({ open, onClose, hasCartItems }: CartDialogProps) {
 
         <DialogActions className="flex! justify-center! py-4!">
           {hasCartItems && (
-            <Button className="flex! rounded-full! bg-black! px-8! py-4! text-base! font-bold! text-white! normal-case!">
+            <Button
+              onClick={onPayClick}
+              className="flex! rounded-full! bg-black! px-8! py-4! text-base! font-bold! text-white! normal-case!"
+            >
               <span>Pay Tk {grandTotal} &nbsp;</span>
               <IconMuis
                 className="text-md!"
