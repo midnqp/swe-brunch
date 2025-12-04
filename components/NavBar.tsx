@@ -16,6 +16,7 @@ import { useState, useEffect } from "react"
 import IconMuis from "./IconMuis"
 import { CartItems } from "./Cart"
 import useCartItems from "@/hooks/useCartItems"
+import backendApis from "@/utils/apis"
 
 export function NavBar() {
   const cartItemsCount = useGlobalState((state) => state.cartItemsCount)
@@ -106,6 +107,15 @@ type CartDialogProps = {
 function CartDialog({ open, onClose, hasCartItems }: CartDialogProps) {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"))
+  const subtotal = useCartItems().list.reduce((prev, curr) => {
+    const product = backendApis
+      .listEngineersItems()
+      .find((p) => p.id === curr.id)
+    return prev + (product?.price || 0) * curr.quantity
+  }, 0)
+  const serviceFreeCost = 17
+  const deliveryCost = 24
+  const grandTotal = subtotal + serviceFreeCost + deliveryCost
   return (
     <div className="relative">
       <Dialog
@@ -153,15 +163,15 @@ function CartDialog({ open, onClose, hasCartItems }: CartDialogProps) {
                 <Divider className="mb-8!" />
                 <div className="info-line flex justify-between">
                   <p>Subtotal</p>
-                  <p>Tk 890</p>
+                  <p>Tk {subtotal}</p>
                 </div>
                 <div className="info-line flex justify-between">
                   <p>Standard Delivery Charge</p>
-                  <p>Tk 24</p>
+                  <p>Tk {deliveryCost}</p>
                 </div>
                 <div className="info-line flex justify-between">
                   <p>Service Fee</p>
-                  <p>Tk 17</p>
+                  <p>Tk {serviceFreeCost}</p>
                 </div>
               </div>
             </div>
@@ -184,7 +194,7 @@ function CartDialog({ open, onClose, hasCartItems }: CartDialogProps) {
         <DialogActions className="flex! justify-center! py-4!">
           {hasCartItems && (
             <Button className="flex! rounded-full! bg-black! px-8! py-4! text-base! font-bold! text-white! normal-case!">
-              <span>Pay Tk 890 &nbsp;</span>{" "}
+              <span>Pay Tk {grandTotal} &nbsp;</span>
               <IconMuis
                 className="text-md!"
                 iconName="arrow_right_alt"

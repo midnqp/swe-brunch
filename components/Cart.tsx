@@ -2,17 +2,25 @@ import { Divider, IconButton } from "@mui/material"
 import IconMuis from "./IconMuis"
 import Image from "next/image"
 import useCartItems from "@/hooks/useCartItems"
+import backendApis from "@/utils/apis"
+import clsx from "clsx"
 
 export function CartItems() {
   const cartItems = useCartItems()
-  //const list = [...cartItems.list, ...cartItems.list]
+  const products = backendApis.listEngineersItems()
   const list = cartItems.list!
   console.log("cart: rendering")
   return (
     <div>
       {list.map((item: any, idx: number) => (
         <div key={idx}>
-          <CartItemRow {...{ item, cartItems }} />
+          <CartItemRow
+            {...{
+              item,
+              product: products.find((p) => p.id == item.id),
+              cartItems,
+            }}
+          />
           {idx < list.length - 1 && (
             <div className="px-4">
               <Divider className="" />
@@ -25,7 +33,7 @@ export function CartItems() {
 }
 
 function CartItemRow(props: any) {
-  const { item, cartItems } = props
+  const { item, cartItems, product } = props
   //const cartItems = useCartItems()
   const onAddClick = () => cartItems.add(item.id)
   const onRemoveClick = () => cartItems.removeByQty(item.id, 1)
@@ -36,14 +44,19 @@ function CartItemRow(props: any) {
     <div className="flex w-full py-4">
       {/** tip: the correct way to deal with images  */}
       <div className="flex h-full w-[25%]">
-        <div className="relative m-4 h-16 w-16 overflow-hidden rounded-2xl! border border-gray-400">
-          <Image className="object-cover" src="/food.jpg" fill alt="" />
+        <div
+          className={clsx(
+            "relative h-16 w-16 overflow-hidden rounded-2xl! border border-gray-400",
+            false && "m-4",
+          )}
+        >
+          <Image className="object-cover" src={product.image} fill alt="" />
         </div>
       </div>
       <div className="flex w-[50%] items-center">
         <div className="flex h-16 flex-col justify-between">
-          <p className="w-full font-bold">Item Name</p>
-          <p className="w-full text-gray-600">Tk 100</p>
+          <p className="w-full font-bold">{product.name}</p>
+          <p className="w-full text-gray-600">Tk {product.price}</p>
         </div>
       </div>
       <div className="flex w-[25%] items-center justify-center">

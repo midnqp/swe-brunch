@@ -146,7 +146,7 @@ function Card(props: any) {
               />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Eat this now!" arrow>
+          <Tooltip title="Eat now!" arrow>
             <IconButton
               // note: using onMouseEnter fails miserably on mobile.
               onPointerEnter={() => setHover(true)}

@@ -34,7 +34,7 @@ const backendApis = {
       {
         id: "eng-4",
         name: "Cappucino",
-        price: "249",
+        price: 249,
         image: "/cappucino.jpg",
         description:
           "A delightful blend of espresso, steamed milk & thick milk foam, creating a creamy, frothy texture.",
