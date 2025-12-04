@@ -1,4 +1,5 @@
 "use client"
+import "./css.css"
 import IconMuis from "@/components/IconMuis"
 import { PageLayout } from "@/components/PageLayout"
 import Image from "next/image"
@@ -12,6 +13,7 @@ import {
   TimelineOppositeContent,
 } from "@mui/lab"
 import moment from "moment"
+import { useEffect, useState } from "react"
 
 export default function ThanksPage() {
   const orderPlacedTime = moment(Date.now()).format("hh:mm a")
@@ -25,12 +27,26 @@ export default function ThanksPage() {
     .add(50, "minutes")
     .format("hh:mm a")
 
+  const [currentStatus, setCurrentStatus] = useState<
+    "preparing" | "delivering"
+  >("preparing")
+
+  const animation = {
+    animation: "pulseHeightForOrderTimeline 1.5s ease-in-out infinite",
+    bgcolor: "black",
+    width: 2,
+    flexGrow: 0,
+  }
+
   return (
     <PageLayout>
       <div className="flex w-full justify-center">
         <div className="*:flex *:justify-center">
           <div className="flex justify-center">
-            <div className="relative mb-4 h-48 w-48">
+            <div
+              className="relative mb-4 h-48 w-48"
+              style={{ animation: "imageMoving 2s ease-in-out infinite" }}
+            >
               <Image src="/burger-icon.png" fill className="object-cover!" />
               {/* <IconMuis className="rounded-full! border text-9xl! text-green-500! font-bold!" iconName="check" /> */}
             </div>
@@ -46,7 +62,15 @@ export default function ThanksPage() {
               <TimelineOppositeContent color="text.secondary">
                 {orderPreparingStartTime}
               </TimelineOppositeContent>
-              <Sep />
+
+              <TimelineSeparator>
+                <TimelineDot />
+                <TimelineConnector
+                  className=""
+                  sx={{ ...(currentStatus == "preparing" && animation) }}
+                />
+              </TimelineSeparator>
+
               <TimelineContent className="font-bold!">
                 Let him cook
               </TimelineContent>
@@ -55,7 +79,16 @@ export default function ThanksPage() {
               <TimelineOppositeContent color="text.secondary">
                 {orderDeliveryStartTime}
               </TimelineOppositeContent>
-              <Sep />
+              {/* <Sep /> */}
+
+              <TimelineSeparator>
+                <TimelineDot />
+                <TimelineConnector
+                  className=""
+                  sx={{ ...(currentStatus == "delivering" && animation) }}
+                />
+              </TimelineSeparator>
+
               <TimelineContent className="font-bold!">
                 On the way
               </TimelineContent>

@@ -1,4 +1,10 @@
 const backendApis = {
+  createOrder(opts: any) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, 1000)
+    })
+  },
+
   listMenus() {
     //return makeApiRequest('GET', "/menus")
   },
