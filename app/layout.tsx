@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import {
   Geist,
   Geist_Mono,
+
   //Poppins as Geist,
   //Montserrat as Geist ,
   //Fredoka as Geist,
@@ -10,6 +11,7 @@ import "./globals.css"
 import localFont from "next/font/local"
 import { RunOnce } from "./_runOnce"
 import { Analytics } from "@vercel/analytics/next"
+import clsx from "clsx"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,8 +50,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1" /> */}
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${muisFillFont.variable} antialiased`}
+        className={clsx(
+          `${geistSans.variable} ${geistMono.variable} antialiased`,
+          false && muisFillFont.variable,
+        )}
         /**
          * note: this is the difference between fontName.variable and fontName.className.
          *
