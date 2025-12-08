@@ -10,7 +10,8 @@ import Image from "next/image"
 import { useEffect, useState } from "react"
 
 export default function BrowsePage() {
-  const products = backendApis.listEngineersItems()
+  const engineersProducts = backendApis.listEngineersItems()
+  const mangersProducts = backendApis.listProductManagersItems()
   const cartItems = useCartItems()
   const globalStateCartItemsCount = useGlobalState((s) => s.cartItemsCount)
   const isMobile = useMediaQuery(useTheme().breakpoints.down("md"))
@@ -30,18 +31,19 @@ export default function BrowsePage() {
       name: "Software Engineer's Brunch",
       description:
         "For those who write code. Meals optimized for protein and sustained anchoring in the desk.",
-      products: products,
+      products: engineersProducts,
     },
-    /*{
-    name: "Product Manager's Brunch",
-    description: `'High-impact' and 'customer-centric' cuisines. If your team has delivered before deadline, treat them with an 1:6.`,
-    products: products
-  },
-  {
-    name: "Founder's Brunch",
-    description: 'Wide variety of choices. Pick yours based on your remaining runway.',
-    products: products
-  } */
+    {
+      name: "Product Manager's Brunch",
+      description: `'High-impact' and 'customer-centric' cuisines. If your team has delivered before deadline, treat them with an 1:6.`,
+      products: mangersProducts,
+    },
+    {
+      name: "Founder's Brunch",
+      description:
+        "Wide variety of choices. Pick yours based on your remaining runway.",
+      products: backendApis.listFoundersItems(),
+    },
   ]
 
   return (
@@ -146,7 +148,7 @@ function Card(props: any) {
               />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Eat now!" arrow>
+          <Tooltip title="Eat right now!" arrow>
             <IconButton
               // note: using onMouseEnter fails miserably on mobile.
               onPointerEnter={() => setHover(true)}
