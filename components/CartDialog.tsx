@@ -29,7 +29,6 @@ export function CartDialog({ open, onClose, hasCartItems }: CartDialogProps) {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"))
   const setCartModalOpen = useGlobalState((s) => s.setCartModalOpen)
-  const setCartItems = useGlobalState((s) => s.setCartItems)
 
   const subtotal = cartItems.list.reduce((prev, curr) => {
     const product = backendApis
@@ -46,7 +45,7 @@ export function CartDialog({ open, onClose, hasCartItems }: CartDialogProps) {
     await backendApis.createOrder({ items: cartItems.list })
     router.push("/thanks")
     setCartModalOpen(false)
-    setCartItems([]) // clear cart
+    cartItems.removeAll()
   }
 
   return (

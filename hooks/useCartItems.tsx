@@ -50,6 +50,10 @@ export default function useCartItems() {
     [cartItems],
   )
 
+  const removeAll = useCallback(() => {
+    setCartItems([])
+  }, [cartItems])
+
   const removeByQty = useCallback(
     (id: any, qty: number) => {
       let result: typeof cartItems
@@ -92,5 +96,5 @@ export default function useCartItems() {
   //
   // (code removed.)
 
-  return { list: cartItems, add, remove, removeByQty }
+  return { list: cartItems, add, remove, removeByQty, removeAll }
 }
