@@ -19,21 +19,52 @@ import useCartItems from "@/hooks/useCartItems"
 import backendApis from "@/utils/apis"
 import { useRouter } from "next/navigation"
 import { CartDialog } from "./CartDialog"
+import { handleSignIn } from "@/utils/auth"
+import { useSession } from "next-auth/react"
+import Image from "next/image"
 
 export function NavBar() {
   const cartItemsCount = useGlobalState((state) => state.cartItemsCount)
   const isCartModalOpen = useGlobalState((state) => state.isCartModalOpen)
   const setCartModalOpen = useGlobalState((state) => state.setCartModalOpen)
   const hasCartItems = !!cartItemsCount
+  const isMobile = useMediaQuery(useTheme().breakpoints.down("md"))
+  const session = useSession()
 
   return (
     <div className="fixed top-0 left-0 z-50 flex min-h-24 w-full px-4 py-4 backdrop-blur-sm md:min-h-24 md:px-8 md:py-2">
-      <div className="flex w-[80%] items-center">
+      <div className="flex w-[50%] items-center">
         <Logo />
       </div>
-      <div className="flex w-[20%] items-center justify-end">
-        {false && (
-          <IconButton className="mr-4">
+      <div className="flex w-[50%] items-center justify-end [&>*:last-child]:mr-0! [&>button]:mr-4!">
+        {!isMobile && (
+          <>
+            <div
+              className="mr-16! cursor-pointer text-gray-400"
+              onClick={() => {
+                document
+                  .getElementById("founders-brunch")
+                  ?.scrollIntoView({ behavior: "smooth", block: "center" })
+              }}
+            >
+              Founder's Brunch
+            </div>
+            <div
+              className="mr-16! cursor-pointer text-gray-400"
+              onClick={() => {
+                document
+                  .getElementById("pms-brunch")
+                  ?.scrollIntoView({ behavior: "smooth", block: "center" })
+              }}
+            >
+              PM's Brunch
+            </div>
+            {/* <div className="hidden md:block mr-16! text-gray-400"><a target="_blank" href='https://github.com/midnqp/swe-brunch/tree/main/CHANGELOG.md'>Changelog</a></div> */}
+          </>
+        )}
+
+        {!isMobile && (
+          <IconButton className="">
             <IconMuis className="" iconName="dark_mode" />
           </IconButton>
         )}
@@ -48,12 +79,32 @@ export function NavBar() {
           </Badge>
         </IconButton>
 
-        <CartDialog
-          open={isCartModalOpen}
-          onClose={() => setCartModalOpen(false)}
-          hasCartItems={hasCartItems}
-        />
+        {
+          <IconButton
+            onClick={() => {
+              if (!session.data) handleSignIn()
+            }}
+          >
+            {session.data ? (
+              <div className="relative aspect-square w-6! overflow-hidden rounded-full!">
+                <Image
+                  fill
+                  className="object-cover"
+                  src={session.data.user?.image}
+                  alt=""
+                />
+              </div>
+            ) : (
+              <IconMuis iconName="account_circle" />
+            )}
+          </IconButton>
+        }
       </div>
+      <CartDialog
+        open={isCartModalOpen}
+        onClose={() => setCartModalOpen(false)}
+        hasCartItems={hasCartItems}
+      />
     </div>
   )
 }

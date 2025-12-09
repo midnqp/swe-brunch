@@ -8,8 +8,18 @@ import { IconButton, Tooltip, useMediaQuery, useTheme } from "@mui/material"
 import clsx from "clsx"
 import Image from "next/image"
 import { useEffect, useState } from "react"
+import { SessionProvider, useSession } from "next-auth/react"
+import { handleSignIn } from "@/utils/auth"
 
-export default function BrowsePage() {
+export default function Page() {
+  return (
+    <SessionProvider>
+      <_BrowsePage />
+    </SessionProvider>
+  )
+}
+
+function _BrowsePage() {
   const engineersProducts = backendApis.listEngineersItems()
   const mangersProducts = backendApis.listProductManagersItems()
   const cartItems = useCartItems()
@@ -22,9 +32,10 @@ export default function BrowsePage() {
     cartItems.add(id)
   }
 
+  const s = useSession()
   useEffect(() => {
-    console.log("BrowsePage :: cartItems changed")
-  }, [cartItems])
+    //console.log('session', s)
+  }, [s])
 
   const menus = [
     {
@@ -37,12 +48,14 @@ export default function BrowsePage() {
       name: "Product Manager's Brunch",
       description: `'High-impact' and 'customer-centric' cuisines. If your team has delivered before deadline, treat them with an 1:6.`,
       products: mangersProducts,
+      id: "pms-brunch",
     },
     {
       name: "Founder's Brunch",
       description:
         "Wide variety of choices. Pick yours based on your remaining runway.",
       products: backendApis.listFoundersItems(),
+      id: "founders-brunch",
     },
   ]
 
@@ -53,7 +66,9 @@ export default function BrowsePage() {
       {menus.map((m, idx) => (
         <div key={idx} className="mt-24">
           <div className="mb-8">
-            <h2 className="text-gray-600">{m.name}</h2>
+            <h2 className="text-gray-600" id={m?.id}>
+              {m.name}
+            </h2>
             <div className="text-sm text-gray-400"> {m.description} </div>
           </div>
           <div

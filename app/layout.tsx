@@ -12,6 +12,7 @@ import localFont from "next/font/local"
 import { RunOnce } from "./_runOnce"
 import { Analytics } from "@vercel/analytics/next"
 import clsx from "clsx"
+import { getSession } from "@/utils/auth"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,11 +44,14 @@ export const muisFillFont = localFont({
   variable: "--font-muis-filled",
 })
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  //const session = await getSession()
+  //console.log('gotten session', session)
+
   return (
     <html lang="en">
       <head>
