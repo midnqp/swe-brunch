@@ -7,7 +7,7 @@ const g = GoogleProvider({
 })
 export const opts = {
   providers: [g],
-  secret: "password",
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     // jwt(params) {
     //   const p =params.profile
