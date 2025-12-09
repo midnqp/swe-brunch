@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  enablePrerenderSourceMaps: true,
+  //productionBrowserSourceMaps: true,
   images: {
     remotePatterns: [
       {

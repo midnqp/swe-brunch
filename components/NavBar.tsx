@@ -29,7 +29,10 @@ export function NavBar() {
   const setCartModalOpen = useGlobalState((state) => state.setCartModalOpen)
   const hasCartItems = !!cartItemsCount
   const isMobile = useMediaQuery(useTheme().breakpoints.down("md"))
+  /** session is undefined during the next-build process. */
   const session = useSession()
+  const isLoggedIn = session?.data
+  const userData = session?.data?.user
 
   return (
     <div className="fixed top-0 left-0 z-50 flex min-h-24 w-full px-4 py-4 backdrop-blur-sm md:min-h-24 md:px-8 md:py-2">
@@ -82,15 +85,15 @@ export function NavBar() {
         {
           <IconButton
             onClick={() => {
-              if (!session.data) handleSignIn()
+              if (!isLoggedIn) handleSignIn()
             }}
           >
-            {session.data ? (
+            {isLoggedIn ? (
               <div className="relative aspect-square w-6! overflow-hidden rounded-full!">
                 <Image
                   fill
                   className="object-cover"
-                  src={session.data.user?.image}
+                  src={userData.image!}
                   alt=""
                 />
               </div>
