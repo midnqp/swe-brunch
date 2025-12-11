@@ -7,7 +7,7 @@ import clsx from "clsx"
 
 export function CartItems() {
   const cartItems = useCartItems()
-  const products = backendApis.listEngineersItems()
+  const products = backendApis.getAllItems()
   const list = cartItems.list!
   console.log("cart: rendering")
   return (

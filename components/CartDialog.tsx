@@ -31,9 +31,7 @@ export function CartDialog({ open, onClose, hasCartItems }: CartDialogProps) {
   const setCartModalOpen = useGlobalState((s) => s.setCartModalOpen)
 
   const subtotal = cartItems.list.reduce((prev, curr) => {
-    const product = backendApis
-      .listEngineersItems()
-      .find((p) => p.id === curr.id)
+    const product = backendApis.getAllItems().find((p) => p.id === curr.id)
     return prev + (product?.price || 0) * curr.quantity
   }, 0)
   const serviceFreeCost = 17

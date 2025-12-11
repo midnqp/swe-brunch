@@ -90,6 +90,13 @@ const backendApis = {
     ]
   },
 }
+backendApis.getAllItems = () => {
+  return [
+    ...backendApis.listEngineersItems(),
+    ...backendApis.listFoundersItems(),
+    ...backendApis.listProductManagersItems(),
+  ]
+}
 
 const backendApiBaseUrl = "https://swe-brunch-backend.vercel.app/api/v1"
 

@@ -66,7 +66,7 @@ export function NavBar() {
           </>
         )}
 
-        {!isMobile && (
+        {false && !isMobile && (
           <IconButton className="">
             <IconMuis className="" iconName="dark_mode" />
           </IconButton>

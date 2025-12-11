@@ -12,11 +12,7 @@ import { SessionProvider, useSession } from "next-auth/react"
 import { handleSignIn } from "@/utils/auth"
 
 export default function Page() {
-  return (
-    <SessionProvider>
-      <_BrowsePage />
-    </SessionProvider>
-  )
+  return <_BrowsePage />
 }
 
 function _BrowsePage() {

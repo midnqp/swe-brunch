@@ -13,6 +13,7 @@ import { RunOnce } from "./_runOnce"
 import { Analytics } from "@vercel/analytics/next"
 import clsx from "clsx"
 import { getSession } from "@/utils/auth"
+import { NextAuthSessionProvider } from "@/components/SessionProvider"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -74,7 +75,7 @@ export default async function RootLayout({
         style={{ fontFamily: "var(--font-geist-sans)" }}
       >
         <RunOnce />
-        {children}
+        <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
         <Analytics />
       </body>
     </html>
