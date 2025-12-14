@@ -11,6 +11,7 @@ import {
   Button,
   Divider,
   Link,
+  useColorScheme,
 } from "@mui/material"
 import { useState, useEffect } from "react"
 import IconMuis from "./IconMuis"
@@ -33,6 +34,7 @@ export function NavBar() {
   const session = useSession()
   const isLoggedIn = session?.data
   const userData = session?.data?.user
+  const colorScheme = useColorScheme()
 
   return (
     <div className="fixed top-0 left-0 z-50 flex min-h-24 w-full px-4 py-4 backdrop-blur-sm md:min-h-24 md:px-8 md:py-2">

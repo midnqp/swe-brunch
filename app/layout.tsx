@@ -14,6 +14,13 @@ import { Analytics } from "@vercel/analytics/next"
 import clsx from "clsx"
 import { getSession } from "@/utils/auth"
 import { NextAuthSessionProvider } from "@/components/SessionProvider"
+import {
+  createTheme,
+  InitColorSchemeScript,
+  ThemeProvider,
+} from "@mui/material"
+import { theme } from "@/utils/theme"
+import CssBaseline from "@mui/material/CssBaseline"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -54,7 +61,7 @@ export default async function RootLayout({
   //console.log('gotten session', session)
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1" /> */}
       </head>
@@ -75,7 +82,12 @@ export default async function RootLayout({
         style={{ fontFamily: "var(--font-geist-sans)" }}
       >
         <RunOnce />
-        <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
+        <InitColorSchemeScript defaultMode="system" />
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+
+          <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>
