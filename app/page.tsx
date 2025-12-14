@@ -106,6 +106,7 @@ function Card(props: any) {
   const [hover, setHover] = useState(false)
   const [isFavorited, setFavorited] = useState(false)
   const isMobile = useMediaQuery(useTheme().breakpoints.down("md"))
+  const [cardHover, setCardHover] = useState(false)
 
   const onAddClick = (id: any) => {
     props.addToCart(id)
@@ -142,42 +143,57 @@ function Card(props: any) {
   }, [])
 
   return (
-    <div className="overflow-hidden rounded-md border border-gray-300 bg-white">
-      <div style={{}} className="relative">
-        <div className="absolute! top-0 right-0 z-10 flex gap-2 p-4 md:pt-2 md:pr-2">
-          <Tooltip arrow title={isFavorited ? "Unsave" : "Save for later"}>
-            <IconButton
-              onClick={() => onFavoriteClick(item.id)}
-              className="h-10 w-10 rounded-full bg-gray-300! md:h-8 md:w-8"
-            >
-              <IconMuis
-                className={clsx("", {
-                  "muis-icon-filled text-red-600!": isFavorited,
-                  "text-white!": !isFavorited,
-                })}
-                iconName="favorite"
-              />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Eat right now!" arrow>
-            <IconButton
-              // note: using onMouseEnter fails miserably on mobile.
-              onPointerEnter={() => setHover(true)}
-              onPointerLeave={() => setHover(false)}
-              onClick={() => onAddClick(item.id)}
-              className={clsx(
-                "h-10 w-10 rounded-full shadow-2xl! md:h-8 md:w-8",
-                shouldShowItemQty ? "bg-black!" : "bg-gray-300!",
-              )}
-            >
-              {shouldShowItemQty ? (
-                <p className="text-base! text-white!">{ci.quantity}</p>
-              ) : (
-                <IconMuis className="text-white!" iconName={"add"} />
-              )}
-            </IconButton>
-          </Tooltip>
-        </div>
+    <div
+      onPointerEnter={() => setCardHover(true)}
+      onPointerLeave={() => setCardHover(false)}
+      // onFocus={() => setCardHover(true)}
+      // onBlur={() => setCardHover(false)}
+      className={clsx(
+        "overflow-hidden rounded-md border border-gray-300 hover:shadow-md dark:border-gray-700",
+        true && "bg-gray-50 dark:bg-gray-950",
+      )}
+    >
+      <div style={{}} className="relative transition-all">
+        {
+          <div className="absolute! top-0 right-0 z-10 flex gap-2 p-4 md:pt-2 md:pr-2">
+            {(true || cardHover || isFavorited) && (
+              <Tooltip arrow title={isFavorited ? "Unsave" : "Save for later"}>
+                <IconButton
+                  onClick={() => onFavoriteClick(item.id)}
+                  className="h-10 w-10 rounded-full bg-gray-300! shadow-md md:h-8 md:w-8"
+                >
+                  <IconMuis
+                    className={clsx("", {
+                      "muis-icon-filled text-red-600!": isFavorited,
+                      "text-white!": !isFavorited,
+                    })}
+                    iconName="favorite"
+                  />
+                </IconButton>
+              </Tooltip>
+            )}
+            {(true || cardHover || isAdded) && (
+              <Tooltip title="Eat right now!" arrow>
+                <IconButton
+                  // note: using onMouseEnter fails miserably on mobile.
+                  onPointerEnter={() => setHover(true)}
+                  onPointerLeave={() => setHover(false)}
+                  onClick={() => onAddClick(item.id)}
+                  className={clsx(
+                    "h-10 w-10 rounded-full shadow-md md:h-8 md:w-8",
+                    shouldShowItemQty ? "bg-black!" : "bg-gray-300!",
+                  )}
+                >
+                  {shouldShowItemQty ? (
+                    <p className="text-base! text-white!">{ci.quantity}</p>
+                  ) : (
+                    <IconMuis className="text-white!" iconName={"add"} />
+                  )}
+                </IconButton>
+              </Tooltip>
+            )}
+          </div>
+        }
       </div>
       {/** tip: how to work with next's image compo. */}
       <div className="relative aspect-[4/3] w-full!">

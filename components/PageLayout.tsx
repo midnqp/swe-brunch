@@ -76,7 +76,8 @@ function Footer() {
   return (
     <footer
       className={clsx(
-        "w-full bg-gray-100 pt-32",
+        "w-full pt-32",
+        false && "bg-gray-100 dark:bg-inherit",
         isMobile && hasItems ? "pb-20" : "",
       )}
     >
@@ -98,7 +99,11 @@ function Footer() {
               <ul className="space-y-2 text-sm text-gray-500">
                 {companyLinks.map((link, i) => (
                   <li key={i}>
-                    <a target="_blank" href={link.href}>
+                    <a
+                      className="hover:text-black dark:hover:text-white"
+                      target="_blank"
+                      href={link.href}
+                    >
                       {link.label}
                     </a>
                   </li>

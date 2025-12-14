@@ -1,4 +1,5 @@
 import { useGlobalState } from "@/stores/useGlobalState"
+import cookies from "cookies-next"
 import {
   IconButton,
   Badge,
@@ -114,7 +115,7 @@ export function Logo(props: { captions?: boolean }) {
   const list = [
     `Missed breakfast today? We did too.`,
     `More coffee, better code.`,
-    `Return to office mandate? Straight to kitchen!`,
+    `Return to office mandate? Straight to kitchen.`,
     `Software Engineer's Brunch`,
   ]
   const logoCaption = list[logoCaptionIdx]
@@ -135,7 +136,7 @@ export function Logo(props: { captions?: boolean }) {
     <div className="flex w-full">
       <div>
         <Link className="flex" underline="none" href="/">
-          <p className="flex justify-center border-2 border-black p-0 font-mono text-4xl leading-none text-black">
+          <p className="flex justify-center border-2 border-black p-0 font-mono text-4xl leading-none text-black dark:border-white dark:text-white">
             SWE BRUNCH
           </p>
         </Link>
@@ -163,11 +164,15 @@ function DarkModeButton() {
   const onButtonClick = () => {
     const newTheme = colorScheme.mode == "light" ? "dark" : "light"
     colorScheme.setMode(newTheme)
-    window.cookieStore.set({
-      expires: null,
-      name: "userTheme",
-      value: newTheme,
-    })
+    // note: without https, 'window.cookieStore' becomes unavailable.
+    // in that case, the legacy 'document.cookie' needs to be used.
+    // to avoid thinking about it, i'm using cookies-next.
+    cookies.setCookie("userTheme", newTheme)
+    // window.cookieStore.set({
+    //   expires: null,
+    //   name: "userTheme",
+    //   value: newTheme,
+    // })
   }
 
   return (

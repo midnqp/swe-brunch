@@ -56,11 +56,18 @@ function CartItemRow(props: any) {
       <div className="flex w-[50%] items-center">
         <div className="flex h-16 flex-col justify-between">
           <p className="w-full font-bold">{product.name}</p>
-          <p className="w-full text-gray-600">Tk {product.price}</p>
+          <p className="w-full text-gray-600 dark:text-white">
+            Tk {product.price}
+          </p>
         </div>
       </div>
       <div className="flex w-[25%] items-center justify-center">
-        <div className="flex items-center rounded-3xl border border-gray-300 bg-gray-100 px-2 py-1">
+        <div
+          className={clsx(
+            "flex items-center rounded-3xl border border-gray-300 px-2 py-1 dark:border-gray-600",
+            true && "bg-gray-100 dark:bg-gray-900",
+          )}
+        >
           {/** note: all these foolishness with <Button />
            * only due to forgetting <IconButton /> 😡😡😡😡😡. */}
 
