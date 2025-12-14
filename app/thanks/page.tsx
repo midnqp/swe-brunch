@@ -47,7 +47,12 @@ export default function ThanksPage() {
               className="relative mb-4 h-48 w-48"
               style={{ animation: "imageMoving 2s ease-in-out infinite" }}
             >
-              <Image src="/burger-icon.png" fill className="object-cover!" />
+              <Image
+                alt=""
+                src="/burger-icon.png"
+                fill
+                className="object-cover!"
+              />
               {/* <IconMuis className="rounded-full! border text-9xl! text-green-500! font-bold!" iconName="check" /> */}
             </div>
           </div>

@@ -13,6 +13,7 @@ import {
   Divider,
   Link,
   useColorScheme,
+  Tooltip,
 } from "@mui/material"
 import { useState, useEffect } from "react"
 import IconMuis from "./IconMuis"
@@ -45,7 +46,7 @@ export function NavBar() {
         {!isMobile && (
           <>
             <div
-              className="mr-16! cursor-pointer text-gray-400"
+              className="mr-16! cursor-pointer text-gray-400 hover:text-black dark:hover:text-white"
               onClick={() => {
                 document
                   .getElementById("founders-brunch")
@@ -55,7 +56,7 @@ export function NavBar() {
               Founder's Brunch
             </div>
             <div
-              className="mr-16! cursor-pointer text-gray-400"
+              className="mr-16! cursor-pointer text-gray-400 hover:text-black dark:hover:text-white"
               onClick={() => {
                 document
                   .getElementById("pms-brunch")
@@ -70,17 +71,19 @@ export function NavBar() {
 
         {!isMobile && <DarkModeButton />}
 
-        <IconButton
-          onClick={() => {
-            setCartModalOpen(true)
-          }}
-        >
-          <Badge badgeContent={cartItemsCount} color="warning">
-            <IconMuis iconName="local_mall" />
-          </Badge>
-        </IconButton>
+        <Tooltip title="Your cart" arrow>
+          <IconButton
+            onClick={() => {
+              setCartModalOpen(true)
+            }}
+          >
+            <Badge badgeContent={cartItemsCount} color="warning">
+              <IconMuis iconName="local_mall" />
+            </Badge>
+          </IconButton>
+        </Tooltip>
 
-        {
+        <Tooltip title="Sign in with Google" arrow>
           <IconButton
             onClick={() => {
               if (!isLoggedIn) handleSignIn()
@@ -99,7 +102,7 @@ export function NavBar() {
               <IconMuis iconName="account_circle" />
             )}
           </IconButton>
-        }
+        </Tooltip>
       </div>
       <CartDialog
         open={isCartModalOpen}
@@ -176,8 +179,10 @@ function DarkModeButton() {
   }
 
   return (
-    <IconButton onClick={onButtonClick} className="">
-      <IconMuis className="" iconName="dark_mode" />
-    </IconButton>
+    <Tooltip title="Light attracts bugs." arrow>
+      <IconButton onClick={onButtonClick} className="">
+        <IconMuis className="" iconName="dark_mode" />
+      </IconButton>
+    </Tooltip>
   )
 }
