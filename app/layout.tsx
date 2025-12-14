@@ -1,26 +1,15 @@
-import type { Metadata } from "next"
-import {
-  Geist,
-  Geist_Mono,
-
-  //Poppins as Geist,
-  //Montserrat as Geist ,
-  //Fredoka as Geist,
-} from "next/font/google"
-import "./globals.css"
-import localFont from "next/font/local"
-import { RunOnce } from "./_runOnce"
+import { NextAuthSessionProvider } from "@/components/SessionProvider"
+import { InitColorSchemeScript } from "@mui/material"
+import CssBaseline from "@mui/material/CssBaseline"
 import { Analytics } from "@vercel/analytics/next"
 import clsx from "clsx"
-import { getSession } from "@/utils/auth"
-import { NextAuthSessionProvider } from "@/components/SessionProvider"
-import {
-  createTheme,
-  InitColorSchemeScript,
-  ThemeProvider,
-} from "@mui/material"
-import { theme } from "@/utils/theme"
-import CssBaseline from "@mui/material/CssBaseline"
+import type { Metadata } from "next"
+import { Geist, Geist_Mono } from "next/font/google"
+import localFont from "next/font/local"
+import { RunOnce } from "./_runOnce"
+import "./globals.css"
+import { MuiThemeProvider } from "@/components/ThemeProvider"
+import { cookies } from "next/headers"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -59,8 +48,14 @@ export default async function RootLayout({
 }>) {
   //const session = await getSession()
   //console.log('gotten session', session)
+  const c = await cookies()
+  const userTheme = c.get("userTheme")?.value
+  const defaultTheme = userTheme || ("system" as const)
+  console.log("server :: defaulttheme", defaultTheme)
 
   return (
+    // note: am i not suppressing something huge?
+    // no, i'm only suppressing the newly added "class=dark" to this html element.
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1" /> */}
@@ -82,12 +77,24 @@ export default async function RootLayout({
         style={{ fontFamily: "var(--font-geist-sans)" }}
       >
         <RunOnce />
-        <InitColorSchemeScript defaultMode="system" />
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
+        {/* note: let's forget about cross-tab theme.
+        i just want the system theme to be set initially.
+        and let the user override the system theme.
+        and let the page load with the correct theme from the get-go.
 
+
+        and wow, this <InitColorSchemeScript /> does exactly that accurate thing.
+        it adds `class='dark'` to root element for the server-generated DOM that is 
+        shown to the user before hydration. another GOAT.
+         */}
+        <InitColorSchemeScript
+          attribute="class"
+          defaultMode={defaultTheme as any}
+        />
+        <MuiThemeProvider defaultTheme={defaultTheme}>
+          {/* <CssBaseline /> */}
           <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
-        </ThemeProvider>
+        </MuiThemeProvider>
         <Analytics />
       </body>
     </html>

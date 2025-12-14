@@ -17,7 +17,12 @@ export function PageLayout(props: any) {
     <div>
       <NavBar />
       {/* pt-24 for the navbar. */}
-      <div className="flex min-h-screen justify-center bg-gray-100 pt-24">
+      <div
+        className={clsx(
+          "flex min-h-screen justify-center pt-24",
+          false && "bg-gray-100",
+        )}
+      >
         <div className="w-full max-w-7xl px-4 pt-8 md:px-8">
           {props.children}
         </div>

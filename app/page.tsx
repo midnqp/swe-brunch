@@ -62,7 +62,7 @@ function _BrowsePage() {
       {menus.map((m, idx) => (
         <div key={idx} className="mt-24">
           <div className="mb-8">
-            <h2 className="text-gray-600" id={m?.id}>
+            <h2 className="text-gray-600 dark:text-white" id={m?.id}>
               {m.name}
             </h2>
             <div className="text-sm text-gray-400"> {m.description} </div>
@@ -98,7 +98,7 @@ function MobileViewCartBarOffset() {
 }
 
 function Card(props: any) {
-  console.log("Card :: rendering")
+  // console.log("Card :: rendering")
   const item: any = props.item
   //const [isAdded, setIsAdded] = useState(false)
   const ci = props.cartItems.list.find((i: any) => i.id === item.id)

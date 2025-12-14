@@ -34,7 +34,6 @@ export function NavBar() {
   const session = useSession()
   const isLoggedIn = session?.data
   const userData = session?.data?.user
-  const colorScheme = useColorScheme()
 
   return (
     <div className="fixed top-0 left-0 z-50 flex min-h-24 w-full px-4 py-4 backdrop-blur-sm md:min-h-24 md:px-8 md:py-2">
@@ -68,11 +67,7 @@ export function NavBar() {
           </>
         )}
 
-        {false && !isMobile && (
-          <IconButton className="">
-            <IconMuis className="" iconName="dark_mode" />
-          </IconButton>
-        )}
+        {!isMobile && <DarkModeButton />}
 
         <IconButton
           onClick={() => {
@@ -153,5 +148,31 @@ export function Logo(props: { captions?: boolean }) {
         )}
       </div>
     </div>
+  )
+}
+
+function DarkModeButton() {
+  const colorScheme = useColorScheme()
+  if (!colorScheme.mode)
+    return (
+      <IconButton className="">
+        <IconMuis className="" iconName="dark_mode" />
+      </IconButton>
+    )
+
+  const onButtonClick = () => {
+    const newTheme = colorScheme.mode == "light" ? "dark" : "light"
+    colorScheme.setMode(newTheme)
+    window.cookieStore.set({
+      expires: null,
+      name: "userTheme",
+      value: newTheme,
+    })
+  }
+
+  return (
+    <IconButton onClick={onButtonClick} className="">
+      <IconMuis className="" iconName="dark_mode" />
+    </IconButton>
   )
 }
