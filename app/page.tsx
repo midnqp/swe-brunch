@@ -42,7 +42,7 @@ function _BrowsePage() {
     },
     {
       name: "Product Manager's Brunch",
-      description: `'High-impact' and 'customer-centric' cuisines. If your team has delivered before deadline, treat them with an 1:6.`,
+      description: `'High-impact' and 'customer-centric' cuisines. If your team has delivered before deadline, treat them with an 1:5.`,
       products: mangersProducts,
       id: "pms-brunch",
     },

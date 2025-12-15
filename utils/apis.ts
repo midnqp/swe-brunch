@@ -58,6 +58,14 @@ const backendApis = {
         description:
           "A fresh box of precision-cut fries, just as fried as your developers' weekend plans.",
       },
+      {
+        id: "pm-3",
+        name: "Basmati Kacchi—1:5",
+        price: 2499,
+        image: "/basmati-kacchi.jpg",
+        description:
+          "A delightful preparation of slow cooked aromatic rice layered with marinated mutton pcs.",
+      },
     ]
   },
   listFoundersItems() {
