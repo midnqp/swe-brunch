@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // note: MICROFRONTENDS build fail without the next line.
+  turbopack: {},
   enablePrerenderSourceMaps: true,
   //productionBrowserSourceMaps: true,
   images: {
