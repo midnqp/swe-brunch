@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/microfrontends.json",
+  "applications": {
+    "swe-brunch": {
+      "development": {
+        "fallback": "swe-brunch.vercel.app"
+      }
+    },
+    "salaftech-dashboard": {
+      "routing": [
+        {
+          "paths": ["/admin", "/"]
+        }
+      ]
+    }
+  }
+}
