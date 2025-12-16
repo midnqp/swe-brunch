@@ -9,7 +9,7 @@
     "salaftech-dashboard": {
       "routing": [
         {
-          "paths": ["/admin", "/"]
+          "paths": ["/admin"]
         }
       ]
     }
